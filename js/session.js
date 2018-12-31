@@ -21,9 +21,12 @@ Session = function(canvasId) {
         session.interval = setInterval(session.update, int(1000/session.fps));
     }
 
-    session.prepareDoc = function() {
-        // Prepares HTML
+    session.prepareDoc = function() { // Prepares HTML
         document.getElementById("hoveredTileIndex").disabled = true;
+        document.getElementById("viewShift").disabled = true;
+        zoom = mapValue(config.disp.zoomDefault, config.disp.zoomMin, config.disp.zoomMax, 0, 99);
+        console.log(zoom);
+        document.getElementById("viewZoomSlider").value = zoom;
     }
 
     session.update = function() {
@@ -31,17 +34,17 @@ Session = function(canvasId) {
         session.readControls();
         session.updateControlsLabels();
         session.updateShow();
-        //console.log(`Update ${session.tick}`);
     }
 
     session.updateControlsLabels = function() {
-        var sanitizedZoom = int(session.view.zoom * 100);
-        document.getElementById("zoomSliderLabel").innerHTML = sanitizedZoom;
+        var humanizedZoom = int(session.view.zoom * 100);
+        document.getElementById("zoomSliderLabel").innerHTML = humanizedZoom;
         document.getElementById("hoveredTileIndex").value = session.pointedTile;
+        document.getElementById("viewShift").value = `${session.view.x}, ${session.view.y}`;
     }
 
     session.readControls = function() {
-        var zoom = document.getElementById("vievZoomSlider").value;
+        var zoom = document.getElementById("viewZoomSlider").value;
         session.view.zoom = mapValue(zoom, 1, 100, config.disp.zoomMin, config.disp.zoomMax);
     }
 
@@ -66,7 +69,7 @@ Session = function(canvasId) {
                 if (session.clickedTiles.includes(index)) {
                     context.fillStyle = "#f9c";
                 }
-                context.fillRect(x*(tw+1), y*(tw+1), tw, tw);
+                context.fillRect(x*(tw+1)-v.x, y*(tw+1)-v.y, tw, tw);
             }
         }
     }
@@ -79,19 +82,39 @@ Session = function(canvasId) {
         var tw = int(config.disp.baseTileSize * session.view.zoom);
         var rect = session.canvas.getBoundingClientRect();
         var mousePos = {x: evt.clientX - rect.left, y: evt.clientY - rect.top};
-        var pointedTile = {x: int(mousePos.x/(tw+1)), y: int(mousePos.y/(tw+1))};
+        var pointedTile = {x: int((mousePos.x+session.view.x)/(tw+1)),
+            y: int((mousePos.y+session.view.y)/(tw+1))};
         session.pointedTile = getIndex(pointedTile.x, pointedTile.y, session.width);
+        if (session.view.mouseIsClicked) { //Drag
+            var delta = {x:mousePos.x-session.mousePos.x, y:mousePos.y-session.mousePos.y};
+            session.view.x -= delta.x;
+            session.view.y -= delta.y;
+            session.mousePos = {x: evt.clientX - rect.left, y: evt.clientY - rect.top};
+            session.view.isDragged = true;
+        }
     }
 
     session.handlerMouseClick = function(evt) {
         var tw = int(config.disp.baseTileSize * session.view.zoom);
         var rect = session.canvas.getBoundingClientRect();
+        session.mousePos = {x: evt.clientX - rect.left, y: evt.clientY - rect.top};
+        session.view.mouseIsClicked = true;
+        session.view.isDragged = false;
+    }
+
+    session.handlerMouseUnclick = function(evt) {
+        var tw = int(config.disp.baseTileSize * session.view.zoom);
+        var rect = session.canvas.getBoundingClientRect();
         var mousePos = {x: evt.clientX - rect.left, y: evt.clientY - rect.top};
-        var pointedTile = {x: int(mousePos.x/(tw+1)), y: int(mousePos.y/(tw+1))};
-        var tileIndex = getIndex(pointedTile.x, pointedTile.y, session.width);
-        var index = session.clickedTiles.indexOf(tileIndex);
-        if (index > -1) { session.clickedTiles.splice(index, 1);}
-        else {session.clickedTiles.push(tileIndex);}
+        session.view.mouseIsClicked = false;
+        if (! session.view.isDragged) { // Click
+            var pointedTile = {x: int((mousePos.x+session.view.x)/(tw+1)),
+                y: int((mousePos.y+session.view.y)/(tw+1))};
+            var tileIndex = getIndex(pointedTile.x, pointedTile.y, session.width);
+            var index = session.clickedTiles.indexOf(tileIndex);
+            if (index > -1) { session.clickedTiles.splice(index, 1);}
+            else {session.clickedTiles.push(tileIndex);}
+        }
     }
 
     /* --------------------------------
@@ -111,5 +134,6 @@ Session = function(canvasId) {
     // Setup event handlers
     session.canvas.addEventListener('mousemove', session.handlerMouseMove);
     session.canvas.addEventListener("mousedown", session.handlerMouseClick);
+    session.canvas.addEventListener("mouseup", session.handlerMouseUnclick);
     return session;
 }

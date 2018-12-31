@@ -12,6 +12,7 @@ disp:
     subtrH: 250 # Change css #controls height when changing this
     zoomMin: 0.15
     zoomMax: 1.2
+    zoomDefault: 1
 
 # ----------------------------------------------------------------
 map:
