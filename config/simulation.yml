@@ -1,0 +1,67 @@
+# Simulator rules and constants
+
+# ----------------------------------------------------------------
+sim:
+    fps: 30
+    yearLength: 100
+
+# ----------------------------------------------------------------
+disp:
+    baseTileSize: 55
+    subtrW: 20
+    subtrH: 250 # Change css #controls height when changing this
+    zoomMin: 0.15
+    zoomMax: 1.2
+
+# ----------------------------------------------------------------
+map:
+    widthMin: 80
+    widthMax: 100
+    heightMin: 80
+    heightMax: 100
+
+# ----------------------------------------------------------------
+food:
+    baseEff: 1
+    # Defining food kinds
+    kindsAmount: 100
+    kindEffMin: 0.9
+    kindEffMax: 1.3
+    kindTempPrefMin: 10
+    kindTempPrefMax: 20
+    kindTempTolrMin: 0.5
+    kindTempTolrMax: 1.2
+    kindHumdPrefMin: 40
+    kindHumdPrefMax: 80
+    kindHumdTolrMin: 1.4
+    kindHumdTolrMax: 2
+
+# ----------------------------------------------------------------
+tile:
+    # Global
+    erosionPerThousand: 0.0005 # 0.0005 -> 20 yrs
+    baseLootRecovery: 0.0005 # 0.0005 -> 2 yrs
+    # Tile - specific randomized attributes
+    baseFertilityMin: 0.7
+    baseFertilityMax: 1.3
+    baseHumdMin: 0
+    baseHumdMax: 20
+    lootRecoveryFactorMin: 0.8
+    lootRecoveryFactorMax: 1.2
+
+# ----------------------------------------------------------------
+climate:
+    baseTemp: 14
+    baseGhg: 1
+    baseHumd: 30
+    # Amplitudes
+    tempSeasonAmp: 18
+    humdSeasonAmp: 15
+    tempLocalAmp: 4
+    humdLocalAmp: 10
+    event:
+        globalDrought:
+            minInterval: 2000 # 2000 -> 20 yrs
+            chance: 0.005
+            delayMin: 5
+            delayMax: 80

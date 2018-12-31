@@ -1,0 +1,80 @@
+html, body {
+    margin: 5px;
+    background-color: #222;
+    color: #FFF;
+    font-family: monospace;
+    font-weight: bold;
+    font-size: 16px;
+    overflow-y: hidden;
+}
+
+#controls {
+    width: 95%;
+    height: 230px; /*Keep it smaller than config.disp.subtrH */
+    margin: auto;
+    text-align: center;
+    background-color: #333;
+    border: 1px solid #FFF;
+    overflow-y: scroll;
+}
+
+.cleaner {
+    clear: both;
+}
+
+.controlGroup1 { /*Full-width column*/
+    width: calc(100% - 20px);
+    padding: 10px;
+    float: left;
+    margin: auto;
+}
+
+.controlGroup2 { /*Half-width column*/
+    width: calc(50% - 20px);
+    padding: 10px;
+    float: left;
+    margin: auto;
+}
+
+.controlGroup3 { /*Third-width column*/
+    width: calc(33% - 20px);
+    padding: 10px;
+    float: left;
+    margin: auto;
+}
+
+.groupLabel {
+    border-top: 1px dashed #DDD;
+    font-size: 22px;
+    font-family: Verdana;
+    font-weight: normal;
+    margin: 0px;
+    padding-top: 10px;
+    margin-bottom: 10px;
+}
+
+.onTop {
+    border-top: 0px;
+}
+
+input[type=range] {
+    width: calc(100% - 20px);
+    padding: 10px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    margin: auto;
+}
+
+input[type=text] {
+    text-align: center;
+    width: calc(90% - 10px);
+    margin: auto;
+    padding: 2px;
+    font-family: monospace;
+    font-weight: bold;
+    font-size: 16px;
+}
+input[type="text"]:disabled {
+    background-color: #D0D0D0;
+    color: #000;
+}
