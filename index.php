@@ -23,19 +23,27 @@
         <canvas id="mainCanvas"></canvas>
         <div id="controls">
             <div class="controlGroup2">
+                <p class="groupLabel onTop">Season</p>
+                <span id="seasonName"></span> (<span id="seasonNum"></span>)
                 <p class="groupLabel onTop">View controls</p>
                 View Zoom (<span id="zoomSliderLabel"></span>%)
                 <input type="range" min="0" max="99" id="viewZoomSlider">
                 Mapmode<br>
-                <input type="radio" name="mapModeRadio" value="tileFertility"> Fertility
                 <input type="radio" name="mapModeRadio" value="currentTemp"> Temperature
                 <input type="radio" name="mapModeRadio" value="currentHumd"> Humidity<br/>
+                <input type="radio" name="mapModeRadio" value="tileFertility"> Fertility<br/>
             </div>
             <div class="controlGroup2">
-                <p class="groupLabel onTop">Output</p>
-                Hovered Tile<br/>
+                <p class="groupLabel onTop">Hovered Tile</p>
+                Index<br/>
                 <input type="text" id="hoveredTileIndex"><br/>
-                View shift<br/>
+                Temperature<br/>
+                <input type="text" id="hoveredTileTemp"><br/>
+                Humidity<br/>
+                <input type="text" id="hoveredTileHumd"><br/>
+                Fertility<br/>
+                <input type="text" id="hoveredTileFert"><br/>
+                <p class="groupLabel onTop">View position</p>
                 <input type="text" id="viewShift"><br/>
             </div>
             <div class="cleaner"></div>

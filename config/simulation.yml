@@ -2,7 +2,7 @@
 
 # ----------------------------------------------------------------
 sim:
-    fps: 30
+    fps: 10
     yearLength: 100
 
 # ----------------------------------------------------------------
@@ -15,8 +15,8 @@ disp:
     zoomDefault: 0.4 # NOTE: Set this to 1
     startViewX: -92 # NOTE: Set this to 0
     startViewY: -30 # NOTE: Set this to 0
-    hueRed: 0
-    hueGreen: 120
+    hueRed: 10
+    hueGreen: 100
     repr:
         fertMin: 0.6
         fertMax: 1.5
@@ -26,6 +26,8 @@ disp:
         humdMax: 100
         tileSat: 80
         tileLum: 40
+    season: [
+        Summer, Fall, Winter, Spring]
 
 # ----------------------------------------------------------------
 map:
@@ -58,21 +60,22 @@ tile:
     # Tile - specific randomized attributes
     baseFertilityMin: 0.7
     baseFertilityMax: 1.3
-    baseHumdMin: -15
-    baseHumdMax: 15
+    baseHumdMin: -5
+    baseHumdMax: 5
     lootRecoveryFactorMin: 0.8
     lootRecoveryFactorMax: 1.2
 
 # ----------------------------------------------------------------
 climate:
-    baseTemp: 14
+    baseTemp: 10
     baseGhg: 1
-    baseHumd: 30
+    baseHumd: 50
     # Amplitudes
-    tempSeasonAmp: 18
-    humdSeasonAmp: 15
+    tempSeasonAmp: 12
+    humdSeasonAmp: 35
     tempLocalAmp: 4
-    humdLocalAmp: 10
+    humdLocalAmp: 5
+    localAmpIncrease: 0.3
     event:
         globalDrought:
             minInterval: 2000 # 2000 -> 20 yrs

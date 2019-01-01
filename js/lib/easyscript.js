@@ -18,6 +18,11 @@ function int(float) {
     return Math.floor(float);
 }
 
+// Rounds float to 3 decimal places
+function fRound(number) {
+    return Math.round(number * 1000 + 0.0001) / 1000
+}
+
 // Get index for flattened 2D array
 function getIndex(x, y, width) {
     return y*width + x;

@@ -8,7 +8,6 @@ Session = function(canvasId) {
         fps: config.sim.fps,
         tiles: [],
         foodKinds: [],
-        climate: Climate(),
         width: randint(config.map.widthMin, config.map.widthMax),
         height: randint(config.map.heightMin, config.map.heightMax),
         view: {x: config.disp.startViewX, y:config.disp.startViewY, zoom:1, mapMode: ""},
@@ -25,6 +24,9 @@ Session = function(canvasId) {
     session.prepareDoc = function() { // Prepares HTML
         document.getElementById("hoveredTileIndex").disabled = true;
         document.getElementById("viewShift").disabled = true;
+        document.getElementById("hoveredTileTemp").disabled = true;
+        document.getElementById("hoveredTileHumd").disabled = true;
+        document.getElementById("hoveredTileFert").disabled = true;
         zoom = mapValue(config.disp.zoomDefault, 0, config.disp.zoomMax, 0, 100);
         document.getElementById("viewZoomSlider").value = zoom;
     }
@@ -34,6 +36,7 @@ Session = function(canvasId) {
         session.tick += 1;
         session.readControls();
         session.updateControlsLabels();
+        session.climate.update();
         session.updateTiles();
         session.updateScreen();
     }
@@ -41,8 +44,27 @@ Session = function(canvasId) {
     session.updateControlsLabels = function() {
         var humanizedZoom = int(session.view.zoom * 100);
         document.getElementById("zoomSliderLabel").innerHTML = humanizedZoom;
-        document.getElementById("hoveredTileIndex").value = session.pointedTile;
-        document.getElementById("viewShift").value = `${session.view.x}, ${session.view.y}`;
+        var seasonIndex=0, seasonName;
+        var yearTick = session.tick%config.sim.yearLength;
+        var seasonLength = config.sim.yearLength / 4;
+        while (yearTick > seasonLength) {seasonIndex += 1; yearTick -= seasonLength;}
+        var seasonName = config.disp.season[seasonIndex];
+        document.getElementById("seasonName").innerHTML = seasonName;
+        document.getElementById("seasonNum").innerHTML = session.climate.season
+        pt = session.pointedTile
+        document.getElementById("hoveredTileIndex").value = pt;
+        if ((pt >= 0) && (pt < session.width*session.height)) {
+            document.getElementById("hoveredTileTemp").value = fRound(session.tiles[pt].temp);
+            document.getElementById("hoveredTileHumd").value = fRound(session.tiles[pt].humd);
+            document.getElementById("hoveredTileFert").value = fRound(session.tiles[pt].fertility);
+            document.getElementById("viewShift").value = `x = ${session.view.x}` +
+            `, y = ${session.view.y}`;
+        }
+        else {
+            document.getElementById("hoveredTileTemp").value = "";
+            document.getElementById("hoveredTileHumd").value = "";
+            document.getElementById("hoveredTileFert").value = "";
+        }
     }
 
     session.readControls = function() {
@@ -127,7 +149,7 @@ Session = function(canvasId) {
     /* --------------------------------
     * Constructor
     */
-
+    session.climate = Climate(session);
     // Fill foodKinds array
     for (var i = 0; i < config.food.kindsAmount; i+= 1) {
         session.foodKinds.push(FoodKind(session));

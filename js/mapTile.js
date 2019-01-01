@@ -14,7 +14,7 @@ Tile = function(session, x, y) {
     tile.getColor = function(mapMode) {
         var hue;
         if (mapMode == "tileFertility") {
-            hue = mapValue(tile.baseFertility,
+            hue = mapValue(tile.fertility,
                 config.disp.repr.fertMin, config.disp.repr.fertMax,
                 config.disp.hueRed,config.disp.hueGreen);}
         else if (mapMode == "currentTemp") {
@@ -23,18 +23,24 @@ Tile = function(session, x, y) {
                 config.disp.hueRed, config.disp.hueGreen);}
         else if (mapMode == "currentHumd") {
             hue = mapValue(tile.humd,
-                config.disp.repr.humdMin, config.disp.repr.humdMax,
+                config.disp.repr.humdMax, config.disp.repr.humdMin,
                 config.disp.hueRed, config.disp.hueGreen);}
         else {return "#444"}
         return fromHsl(hue, config.disp.repr.tileSat, config.disp.repr.tileLum);
     }
     tile.randomizeDeviations = function() {
-        tile.tempDeviation += random(-1, 1);
-        tile.humdDeviation += random(-1 ,1);
-        if (tile.tempDeviation > 2) tile.tempDeviation = 2;
-        if (tile.humdDeviation > 2) tile.humdDeviation = 2;
-        if (tile.tempDeviation < -2) tile.tempDeviation = -2;
-        if (tile.humdDeviation < -2) tile.humdDeviation = -2;
+        tile.tempDeviation += random(-config.climate.localAmpIncrease,
+            config.climate.localAmpIncrease);
+        tile.humdDeviation += random(-config.climate.localAmpIncrease,
+            config.climate.localAmpIncrease);
+        if (tile.tempDeviation > config.climate.tempLocalAmp)
+            tile.tempDeviation = config.climate.tempLocalAmp;
+        else if (tile.tempDeviation < -config.climate.tempLocalAmp)
+            tile.tempDeviation = -config.climate.tempLocalAmp;
+        if (tile.humdDeviation > config.climate.humdLocalAmp)
+            tile.humdDeviation = config.climate.humdLocalAmp;
+        else if (tile.humdDeviation < -config.climate.humdLocalAmp)
+            tile.humdDeviation = -config.climate.humdLocalAmp;
         // TODO: Replace this with what was described in docs and use values from config
     }
     tile.update = function() {
@@ -46,7 +52,7 @@ Tile = function(session, x, y) {
         if (tile.humd < 0) tile.humd = 0;
         if (tile.humd > 100) tile.humd = 100;
     }
-    tile.baseFertility = random(config.tile.baseFertilityMin, config.tile.baseFertilityMax);
+    tile.fertility = random(config.tile.baseFertilityMin, config.tile.baseFertilityMax);
     tile.baseHumd = random(config.tile.baseHumdMin, config.tile.baseHumdMax);
     tile.lootRecoveryFactor = random(config.tile.lootRecoverydMin, config.tile.lootRecoveryMax);
     return tile;
