@@ -5,6 +5,7 @@ Session = function(canvasId) {
     var session = {
         canvas: document.getElementById(canvasId),
         tick: 0,
+        year: 1,
         fps: config.sim.fps,
         tiles: [],
         foodKinds: [],
@@ -34,6 +35,7 @@ Session = function(canvasId) {
     session.update = function() {
         if (session.brokenLoop) {clearInterval(session.interval); return;}
         session.tick += 1;
+        if (session.tick % config.sim.yearLength == 0) {session.year += 1;}
         session.readControls();
         session.updateControlsLabels();
         session.climate.update();
@@ -42,15 +44,15 @@ Session = function(canvasId) {
     }
 
     session.updateControlsLabels = function() {
-        var humanizedZoom = int(session.view.zoom * 100);
-        document.getElementById("zoomSliderLabel").innerHTML = humanizedZoom;
+        document.getElementById("yearNumber").innerHTML = session.year;
         var seasonIndex=0, seasonName;
         var yearTick = session.tick%config.sim.yearLength;
         var seasonLength = config.sim.yearLength / 4;
         while (yearTick > seasonLength) {seasonIndex += 1; yearTick -= seasonLength;}
         var seasonName = config.disp.season[seasonIndex];
         document.getElementById("seasonName").innerHTML = seasonName;
-        document.getElementById("seasonNum").innerHTML = session.climate.season
+        var humanizedZoom = int(session.view.zoom * 100);
+        document.getElementById("zoomSliderLabel").innerHTML = humanizedZoom;
         pt = session.pointedTile
         document.getElementById("hoveredTileIndex").value = pt;
         if ((pt >= 0) && (pt < session.width*session.height)) {

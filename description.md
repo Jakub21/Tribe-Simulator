@@ -37,7 +37,7 @@ Simulator features seasons, location-depended temperature and humidity, food mec
 To run the simulator copy project root folder and paste it in any sub-directory of your server's `HTDOCS`, and open `localhost` or whatever your host's URL is.
 
 ### Time Scale
-Year length (expressed in ticks) is specified in `sim.yearLength`. Ticks per second on standard (x1) speed is specified in `sim.fps`. Currently those values are 100 and 30, respectively.
+Year length (expressed in ticks) is specified in `sim.yearLength`. Ticks per second on standard (x1) speed is specified in `sim.fps`. Currently those values are 100 and 30, respectively. Note that year starts with summers (This may change soon).
 
 On standard speed simulator runs at 30 ticks per second.
 
