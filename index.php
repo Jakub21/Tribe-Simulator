@@ -26,7 +26,7 @@
                 <p class="groupLabel onTop">Year & Season</p>
                 Year <span id="yearNumber"></span>
                 <span id="seasonName"></span>
-                <p class="groupLabel onTop">View controls</p>
+                <p class="groupLabel">View controls</p>
                 View Zoom (<span id="zoomSliderLabel"></span>%)
                 <input type="range" min="0" max="99" id="viewZoomSlider">
                 Mapmode<br>
@@ -44,7 +44,7 @@
                 <input type="text" id="hoveredTileHumd"><br/>
                 Fertility<br/>
                 <input type="text" id="hoveredTileFert"><br/>
-                <p class="groupLabel onTop">View position</p>
+                <p class="groupLabel">View position</p>
                 <input type="text" id="viewShift"><br/>
             </div>
             <div class="cleaner"></div>
