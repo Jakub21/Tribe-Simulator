@@ -1,7 +1,8 @@
+"use strict";
 /* ----------------------------------------------------------------
 * Tile class
 */
-Tile = function(session, x, y) {
+function Tile(session, x, y) {
     var tile = {
         x: x,
         y: y,

@@ -1,7 +1,8 @@
+"use strict";
 /* ----------------------------------------------------------------
 * FoodKind class
 */
-FoodKind = function(session) {
+function FoodKind(session) {
     var foodKind = {
         session: session
     };

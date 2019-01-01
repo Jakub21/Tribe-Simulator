@@ -1,7 +1,8 @@
+"use strict";
 /* ----------------------------------------------------------------
 * Climate class
 */
-Climate = function(session) {
+function Climate(session) {
     var climate = {
         session: session,
         season: 0,

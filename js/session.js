@@ -1,7 +1,8 @@
+"use strict";
 /* ----------------------------------------------------------------
 * Session class
 */
-Session = function(canvasId) {
+function Session(canvasId) {
     var session = {
         canvas: document.getElementById(canvasId),
         tick: 0,
@@ -28,7 +29,7 @@ Session = function(canvasId) {
         document.getElementById("hoveredTileTemp").disabled = true;
         document.getElementById("hoveredTileHumd").disabled = true;
         document.getElementById("hoveredTileFert").disabled = true;
-        zoom = mapValue(config.disp.zoomDefault, 0, config.disp.zoomMax, 0, 100);
+        var zoom = mapValue(config.disp.zoomDefault, 0, config.disp.zoomMax, 0, 100);
         document.getElementById("viewZoomSlider").value = zoom;
     }
 
@@ -53,7 +54,7 @@ Session = function(canvasId) {
         document.getElementById("seasonName").innerHTML = seasonName;
         var humanizedZoom = int(session.view.zoom * 100);
         document.getElementById("zoomSliderLabel").innerHTML = humanizedZoom;
-        pt = session.pointedTile
+        var pt = session.pointedTile;
         document.getElementById("hoveredTileIndex").value = pt;
         if ((pt >= 0) && (pt < session.width*session.height)) {
             document.getElementById("hoveredTileTemp").value = fRound(session.tiles[pt].temp);
@@ -159,7 +160,8 @@ Session = function(canvasId) {
     // Fill tiles array
     for (var y = 0; y < session.height; y+= 1) {
         for (var x = 0; x < session.width; x+= 1) {
-            session.tiles.push(Tile(session, x, y));
+            var foodIndex = randint(0, config.food.kindsAmount);
+            session.tiles.push(Tile(session, x, y, session.foodKinds[foodIndex]));
         }
     }
     // Setup event handlers
