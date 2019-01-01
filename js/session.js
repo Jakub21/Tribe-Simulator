@@ -2,7 +2,7 @@
 * Session class
 */
 Session = function(canvasId) {
-    session = {
+    var session = {
         canvas: document.getElementById(canvasId),
         tick: 0,
         fps: config.sim.fps,
@@ -11,7 +11,8 @@ Session = function(canvasId) {
         climate: Climate(),
         width: randint(config.map.widthMin, config.map.widthMax),
         height: randint(config.map.heightMin, config.map.heightMax),
-        view: {x: 0, y:0, zoom:1},
+        view: {x: config.disp.startViewX, y:config.disp.startViewY, zoom:1, mapMode: ""},
+        brokenLoop: false,
         pointedTile: -1, // TEMP
         clickedTiles: [] // TEMP
     };
@@ -24,16 +25,17 @@ Session = function(canvasId) {
     session.prepareDoc = function() { // Prepares HTML
         document.getElementById("hoveredTileIndex").disabled = true;
         document.getElementById("viewShift").disabled = true;
-        zoom = mapValue(config.disp.zoomDefault, config.disp.zoomMin, config.disp.zoomMax, 0, 99);
-        console.log(zoom);
+        zoom = mapValue(config.disp.zoomDefault, 0, config.disp.zoomMax, 0, 100);
         document.getElementById("viewZoomSlider").value = zoom;
     }
 
     session.update = function() {
+        if (session.brokenLoop) {clearInterval(session.interval); return;}
         session.tick += 1;
         session.readControls();
         session.updateControlsLabels();
-        session.updateShow();
+        session.updateTiles();
+        session.updateScreen();
     }
 
     session.updateControlsLabels = function() {
@@ -45,10 +47,20 @@ Session = function(canvasId) {
 
     session.readControls = function() {
         var zoom = document.getElementById("viewZoomSlider").value;
-        session.view.zoom = mapValue(zoom, 1, 100, config.disp.zoomMin, config.disp.zoomMax);
+        session.view.zoom = mapValue(zoom, 0, 99, config.disp.zoomMin, config.disp.zoomMax);
+        var radios = document.getElementsByName("mapModeRadio");
+        for (var i = 0; i < radios.length; i+= 1) {
+            if (radios[i].checked) {session.view.mapMode=radios[i].value; break;}
+        }
     }
 
-    session.updateShow = function() {
+    session.updateTiles = function() {
+        for (var i = 0; i < session.tiles.length; i += 1) {
+            session.tiles[i].update();
+        }
+    }
+
+    session.updateScreen = function() {
         // Update canvas size (in case window size changed, this is necessary)
         session.canvas.setAttribute("width", document.documentElement.clientWidth-config.disp.subtrW);
         session.canvas.setAttribute("height", document.documentElement.clientHeight-config.disp.subtrH);
@@ -62,13 +74,8 @@ Session = function(canvasId) {
         for (var x = 0; x < session.width; x++) {
             for (var y = 0; y < session.height; y++) {
                 var index = getIndex(x, y, session.width);
-                context.fillStyle = "#648";
-                if (index == session.pointedTile) {
-                    context.fillStyle = "#c9f";
-                }
-                if (session.clickedTiles.includes(index)) {
-                    context.fillStyle = "#f9c";
-                }
+                var color = session.tiles[index].getColor(session.view.mapMode);
+                context.fillStyle = color;
                 context.fillRect(x*(tw+1)-v.x, y*(tw+1)-v.y, tw, tw);
             }
         }
@@ -128,7 +135,7 @@ Session = function(canvasId) {
     // Fill tiles array
     for (var y = 0; y < session.height; y+= 1) {
         for (var x = 0; x < session.width; x+= 1) {
-            session.tiles.push(Tile(session));
+            session.tiles.push(Tile(session, x, y));
         }
     }
     // Setup event handlers

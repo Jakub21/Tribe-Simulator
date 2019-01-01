@@ -12,14 +12,27 @@ disp:
     subtrH: 250 # Change css #controls height when changing this
     zoomMin: 0.15
     zoomMax: 1.2
-    zoomDefault: 1
+    zoomDefault: 0.4 # NOTE: Set this to 1
+    startViewX: -92 # NOTE: Set this to 0
+    startViewY: -30 # NOTE: Set this to 0
+    hueRed: 0
+    hueGreen: 120
+    repr:
+        fertMin: 0.6
+        fertMax: 1.5
+        tempMin: -10
+        tempMax: 30
+        humdMin: 0
+        humdMax: 100
+        tileSat: 80
+        tileLum: 40
 
 # ----------------------------------------------------------------
 map:
-    widthMin: 80
-    widthMax: 100
-    heightMin: 80
-    heightMax: 100
+    widthMin: 30
+    widthMax: 30
+    heightMin: 30
+    heightMax: 30
 
 # ----------------------------------------------------------------
 food:
@@ -45,8 +58,8 @@ tile:
     # Tile - specific randomized attributes
     baseFertilityMin: 0.7
     baseFertilityMax: 1.3
-    baseHumdMin: 0
-    baseHumdMax: 20
+    baseHumdMin: -15
+    baseHumdMax: 15
     lootRecoveryFactorMin: 0.8
     lootRecoveryFactorMax: 1.2
 

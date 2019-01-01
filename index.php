@@ -27,16 +27,16 @@
                 View Zoom (<span id="zoomSliderLabel"></span>%)
                 <input type="range" min="0" max="99" id="viewZoomSlider">
                 Mapmode<br>
-                <input type="radio" name="mapMode" value="tileFertility"> 
-                <input type="radio" name="mapMode" value="female">
-                <input type="radio" name="mapMode" value="other">
+                <input type="radio" name="mapModeRadio" value="tileFertility"> Fertility
+                <input type="radio" name="mapModeRadio" value="currentTemp"> Temperature
+                <input type="radio" name="mapModeRadio" value="currentHumd"> Humidity<br/>
             </div>
             <div class="controlGroup2">
                 <p class="groupLabel onTop">Output</p>
-                Index of hovered tile
-                <input type="text" id="hoveredTileIndex">
-                View shift
-                <input type="text" id="viewShift">
+                Hovered Tile<br/>
+                <input type="text" id="hoveredTileIndex"><br/>
+                View shift<br/>
+                <input type="text" id="viewShift"><br/>
             </div>
             <div class="cleaner"></div>
         </div>

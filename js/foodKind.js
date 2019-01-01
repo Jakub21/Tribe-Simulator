@@ -2,7 +2,7 @@
 * FoodKind class
 */
 FoodKind = function(session) {
-    foodKind = {
+    var foodKind = {
         session: session
     };
     foodKind.getEfficiency = function(temp, humd) {
