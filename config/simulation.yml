@@ -27,7 +27,7 @@ disp:
         tileSat: 80
         tileLum: 40
     season: [
-        Summer, Fall, Winter, Spring]
+        Summer, Autumn, Winter, Spring]
 
 # ----------------------------------------------------------------
 map:
@@ -73,7 +73,7 @@ climate:
     # Amplitudes
     tempSeasonAmp: 12
     humdSeasonAmp: 35
-    tempLocalAmp: 4
+    tempLocalAmp: 2
     humdLocalAmp: 5
     localAmpIncrease: 0.3
     event:
