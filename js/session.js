@@ -13,6 +13,7 @@ function Session(canvasId) {
         width: randint(config.map.widthMin, config.map.widthMax),
         height: randint(config.map.heightMin, config.map.heightMax),
         view: {x: config.disp.startViewX, y:config.disp.startViewY, zoom:1, mapMode: ""},
+        barVisible: true,
         styleVariant: "h",
         pointedTile: -1, // TEMP
         clickedTiles: [] // TEMP
@@ -40,9 +41,22 @@ function Session(canvasId) {
         session.toggleStyle();
         session.showSection("mapModes");
         document.getElementById("toggleStyle").onclick = session.toggleStyle
+        // Show / Hide UI Bar
+        document.getElementById("hideBar").onclick = function() {
+            document.getElementById("uiBar").style.display = "none";
+            document.getElementById("showBar").style.display = "block";
+            session.barVisible = false;
+        }
+        document.getElementById("showBar").onclick = function() {
+            document.getElementById("uiBar").style.display = "block";
+            document.getElementById("showBar").style.display = "none";
+            session.barVisible = true;
+        }
+        // Section buttons
         document.getElementById("vievMapModes").onclick = function(){session.showSection("mapModes");};
         document.getElementById("vievTileInfo").onclick = function(){session.showSection("tileInfo");};
         document.getElementById("vievSimSettings").onclick = function(){session.showSection("simSettings");};
+        // Map mode buttons
         document.getElementById("mapModeTemp").onclick = function(){session.toggleMapMode("temp");};
         document.getElementById("mapModeHumd").onclick = function(){session.toggleMapMode("humd");};
         document.getElementById("mapModeFert").onclick = function(){session.toggleMapMode("fert");};
@@ -87,20 +101,22 @@ function Session(canvasId) {
     }
 
     session.updateCanvasSize = function() {
-        if (session.styleVariant == "h") {
-            session.canvas.setAttribute("width", document.documentElement.clientWidth -
-                config.disp.style.bodyMargin);
-            session.canvas.setAttribute("height", document.documentElement.clientHeight *
-                (config.disp.style.verPercH / 100) - config.disp.style.bodyMargin -
-                config.disp.style.verSubtr);
+        var width, height;
+        var clientW = document.documentElement.clientWidth;
+        var clientH = document.documentElement.clientHeight;
+        var st = config.disp.style;
+        if (session.styleVariant == "v") {
+            if (session.barVisible) {width = clientW * (st.percW/100) - st.borderX;}
+            else {width = clientW - st.borderX - st.hiddenBarSize;}
+            height = clientH - st.borderY;
         }
-        else if (session.styleVariant == "v") {
-            session.canvas.setAttribute("width", document.documentElement.clientWidth *
-                (config.disp.style.horPercW / 100) - config.disp.style.bodyMargin -
-                config.disp.style.horSubtr);
-            session.canvas.setAttribute("height", document.documentElement.clientHeight -
-                config.disp.style.bodyMargin);
+        else if (session.styleVariant == "h") {
+            width = clientW - st.borderX;
+            if (session.barVisible) {height = clientH * (st.percH/100) - st.borderY;}
+            else {height = clientH - st.borderY - st.hiddenBarSize;}
         }
+        session.canvas.setAttribute("width", width);
+        session.canvas.setAttribute("height", height);
     }
 
     session.updateControlsLabels = function() {

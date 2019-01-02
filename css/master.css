@@ -13,6 +13,9 @@ html, body {
 
 #showBar {
     display: none;
+    background-color: #6F2D45;
+    border-bottom: 1px solid #FFF;
+    border-top: 1px solid #FFF;
 }
 
 #uiBar {

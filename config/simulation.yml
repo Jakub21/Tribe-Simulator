@@ -25,13 +25,11 @@ disp:
         tileSat: 80
         tileLum: 40
     style: # Style canvas
-        # Styling in CSS causes canvas to scale instead of change its boundaries
-        # Styling had to be moved to JS
-        verPercH: 80 # Vertical view: Height [Percentage]
-        verSubtr: 45 # Vertical view: Subract from Height [Pixels]
-        horPercW: 80 # Horizontal view: Width [Percentage]
-        horSubtr: 0 # Horizontal view: Subrtact from Width [Pixels]
-        bodyMargin: 2 # Margin of elements present in both views [Pixels]
+        percW: 80 # Vertical view: Width [Percentage]
+        percH: 80 # Horizontal view: Height [Percentage]
+        borderX: 2 # Canvas border
+        borderY: 2 # Canvas border
+        hiddenBarSize: 15
     season: [
         Summer, Autumn, Winter, Spring]
 

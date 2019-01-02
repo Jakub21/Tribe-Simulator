@@ -4,6 +4,12 @@
     float: left;
 }
 
+#showBar {
+    height: calc(100vh - 2px);
+    float: left;
+    width: 15px;
+}
+
 #mainInfo {
     width: calc(100% - 10px);
 }
