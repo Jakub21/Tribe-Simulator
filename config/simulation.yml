@@ -9,7 +9,7 @@ sim:
 disp:
     baseTileSize: 55
     zoomMin: 0.15
-    zoomMax: 1.24
+    zoomMax: 1.2
     zoomDefault: 1
     startViewX: 0
     startViewY: 0

@@ -31,8 +31,8 @@
                 </span>
                 <button id="toggleStyle">Toggle bar position</button>
                 <p class="subcat">Map Zoom
-                    <span id="outputZoom" class="output"></span></p>
-                <input type="range" id="controlZoom">
+                    <span id="outputZoom" class="output"></span>%</p>
+                <input type="range" id="controlZoom" min="0" max="99">
                 <p class="subcat">Menus</p>
                 <button id="vievMapModes" class="dark menu">Map Modes</button>
                 <button id="vievTileInfo" class="dark menu">Tile Info</button>
@@ -45,7 +45,7 @@
                 <button id="mapModeTemp" class="menu">Temperature</button>
                 <button id="mapModeHumd" class="menu">Humidity</button>
                 <button id="mapModeFert" class="menu">Soil Fertility</button>
-                <p class="subcat">Other mapmode types...</p>
+                <p class="subcat">SubCategory</p>
             </div>
 
             <div id="sectionTileInfo" class="menuSection">
@@ -59,6 +59,11 @@
                 <p class="subcat">Soil Fertility</p>
                 <span id="outputFert" class="output"></span>
             </div>
+
+            <div id="sectionSettings" class="menuSection">
+                <h3>Simulation Settings</h3>
+                <p class="subcat">TODO</p>
+
         </div>
         <div class="cleaner"></div>
         <script src="js/launch.js"></script>

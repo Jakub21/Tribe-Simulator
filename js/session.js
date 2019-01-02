@@ -38,12 +38,37 @@ function Session(canvasId) {
 
     session.prepareDoc = function() { // Prepares HTML
         session.toggleStyle();
+        session.showSection("mapModes");
         document.getElementById("toggleStyle").onclick = session.toggleStyle
+        document.getElementById("vievMapModes").onclick = function(){session.showSection("mapModes");};
+        document.getElementById("vievTileInfo").onclick = function(){session.showSection("tileInfo");};
+        document.getElementById("vievSimSettings").onclick = function(){session.showSection("simSettings");};
         document.getElementById("mapModeTemp").onclick = function(){session.toggleMapMode("temp");};
         document.getElementById("mapModeHumd").onclick = function(){session.toggleMapMode("humd");};
         document.getElementById("mapModeFert").onclick = function(){session.toggleMapMode("fert");};
-        var zoom = mapValue(config.disp.zoomDefault, 0, config.disp.zoomMax, 0, 100);
-        document.getElementById("outputZoom").value = zoom;
+        var zoom = mapValue(config.disp.zoomDefault, config.disp.zoomMin, config.disp.zoomMax, 0, 100);
+        document.getElementById("controlZoom").value = zoom;
+    }
+
+    session.showSection = function(section) {
+        var sectMapModes = document.getElementById("sectionMapmodes");
+        var secTileInfo = document.getElementById("sectionTileInfo");
+        var secSimSettings = document.getElementById("sectionSettings");
+        if (section == "mapModes") {
+            sectMapModes.style.display = "block";
+            secTileInfo.style.display = "none";
+            secSimSettings.style.display = "none";
+        }
+        else if (section == "tileInfo") {
+            sectMapModes.style.display = "none";
+            secTileInfo.style.display = "block";
+            secSimSettings.style.display = "none";
+        }
+        else if (section == "simSettings") {
+            sectMapModes.style.display = "none";
+            secTileInfo.style.display = "none";
+            secSimSettings.style.display = "block";
+        }
     }
 
     session.toggleMapMode = function(mapmode) {
