@@ -14,17 +14,19 @@ html, body {
 #showBar {
     display: none;
     background-color: #6F2D45;
-    border-bottom: 1px solid #FFF;
-    border-top: 1px solid #FFF;
 }
 
 #uiBar {
     background-color: #6F2D45;
-    border-bottom: 1px solid #FFF;
-    border-top: 1px solid #FFF;
 }
 
 #mainInfo {
+    background-color: #FFF;
+    padding: 5px;
+    color: #000;
+}
+
+#sectionButtons {
     background-color: #FFF;
     padding: 5px;
     color: #000;
@@ -53,6 +55,7 @@ span#date {
 #mainCanvas {
     background-color: #000;
     border: 1px solid #FFF;
+    margin: 0px;
 }
 
 .menuSection {
@@ -80,6 +83,11 @@ span.outputNoFS { /*Class output with no font-size setting
     font-family: monospace;
     border-radius: 5px;
     font-weight: bold;
+}
+
+span.subcat {
+    margin-top: 10px;
+    font-size: 16px;
 }
 
 button {
@@ -112,11 +120,6 @@ button.menu {
 
 p {
     margin: 1px;
-}
-
-p.subcat {
-    margin-top: 10px;
-    font-size: 16px;
 }
 
 h3 {

@@ -14,7 +14,6 @@ function Session(canvasId) {
         height: randint(config.map.heightMin, config.map.heightMax),
         view: {x: config.disp.startViewX, y:config.disp.startViewY, zoom:1, mapMode: ""},
         barVisible: true,
-        styleVariant: "h",
         pointedTile: -1, // TEMP
         clickedTiles: [] // TEMP
     };
@@ -38,7 +37,16 @@ function Session(canvasId) {
     }
 
     session.prepareDoc = function() { // Prepares HTML
-        session.toggleStyle();
+        var clientW = document.documentElement.clientWidth;
+        var clientH = document.documentElement.clientHeight;
+        if (clientW >= config.disp.toggleBarAtWidth) {
+            session.styleVariant = "v";
+            document.getElementById("styleVariant").setAttribute("href", "css/vertical.css");
+        }
+        else {
+            session.styleVariant = "h";
+            document.getElementById("styleVariant").setAttribute("href", "css/horizontal.css");
+        }
         session.showSection("mapModes");
         document.getElementById("toggleStyle").onclick = session.toggleStyle
         // Show / Hide UI Bar

@@ -7,6 +7,8 @@ sim:
 
 # ----------------------------------------------------------------
 disp:
+    defaultBarPos: v
+    toggleBarAtWidth: 800
     baseTileSize: 55
     zoomMin: 0.15
     zoomMax: 1.2
@@ -26,7 +28,7 @@ disp:
         tileLum: 40
     style: # Style canvas
         percW: 80 # Vertical view: Width [Percentage]
-        percH: 80 # Horizontal view: Height [Percentage]
+        percH: 70 # Horizontal view: Height [Percentage]
         borderX: 2 # Canvas border
         borderY: 2 # Canvas border
         hiddenBarSize: 15

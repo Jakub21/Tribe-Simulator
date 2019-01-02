@@ -26,13 +26,18 @@
             <button id="hideBar"> Hide </button>
             <div id="mainInfo">
                 <span id="date">
-                    <p>Year <span id="outputYear" class="outputNoFS"></span>
-                    <span id="outputSeason" class="outputNoFS"></span><br/></p>
-                </span>
-                <button id="toggleStyle">Toggle bar position</button>
-                <p class="subcat">Map Zoom
-                    <span id="outputZoom" class="output"></span>%</p>
-                <input type="range" id="controlZoom" min="0" max="99">
+                    Year <span id="outputYear" class="outputNoFS"></span>
+                    <span id="outputSeason" class="outputNoFS"></span>
+                </span><br/>
+                <div>
+                    <button id="toggleStyle">Toggle bar position</button>
+                    <p class="subcat hInline">Map Zoom
+                        <span id="outputZoom" class="output"></span>%</p>
+                    <input type="range" id="controlZoom" min="0" max="99">
+                </div>
+            </div>
+            <div class="cleaner"></div>
+            <div id="sectionButtons">
                 <p class="subcat">Menus</p>
                 <button id="vievMapModes" class="dark menu">Map Modes</button>
                 <button id="vievTileInfo" class="dark menu">Tile Info</button>

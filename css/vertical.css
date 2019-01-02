@@ -2,16 +2,33 @@
     width: 20%;
     height: calc(100vh - 2px);
     float: left;
+    border-bottom: 1px solid #FFF;
+    border-top: 1px solid #FFF;
 }
 
 #showBar {
     height: calc(100vh - 2px);
     float: left;
     width: 15px;
+    border-bottom: 1px solid #FFF;
+    border-top: 1px solid #FFF;
 }
 
 #mainInfo {
     width: calc(100% - 10px);
+    padding-bottom: 2px;
+    border: 0px;
+}
+
+#sectionButtons {
+    width: calc(100% - 10px);
+    padding-top: 2px;
+    border: 0px;
+}
+
+span#date {
+    display: block;
+    margin: 6px;
 }
 
 #hideBar {
@@ -23,4 +40,9 @@ input[type="range"] {
     padding: 5px;
     background-color: #222;
     border-radius: 15px;
+}
+
+button {
+    display: block;
+    margin: 3px auto;
 }
