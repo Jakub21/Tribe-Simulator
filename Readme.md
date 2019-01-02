@@ -2,32 +2,17 @@
 
 ## Meta
 **Creation Date**: December 2018  
+**Latest Update**: January 2019  
 **Author**: Jakub21  
 **GitHub**: https://github.com/Jakub21  
-**Repository**: https://github.com/Jakub21  (not published yet)  
+**Repository**: https://github.com/Jakub21/Tribe-Simulator  
 **License**: MIT license  
-**Doc Version**: Markdown 0.1.1  
+**Doc Version**: Markdown 0.1.2  
 
 Text marked as `inline code` indicates reference to configuration keys. This makes this document useful for users that want modify the simulator.
 
-**Table of contents**
-
-## Fast notes
-**Stuff added during implementation**
-
-```
-map:
-size arguments for randint function (map NS)
-mapMinWidth, mapMaxWidth, mapMinHeight, mapMaxHeight
-
-food:
-efficiency / temperature function should be quadratic
-in function $$ y = (x^2)/(-A) $$ food temp tolerance is A
-humidity is absolute
-humidity is expressed in points (normalized to range 0-100)
-efficiency / humidity function should be linear
-
-```
+**Table of contents**  
+TODO
 
 ## General Description
 This program simulates tribes behaviour on tile-based map.
@@ -36,10 +21,10 @@ Simulator features seasons, location-depended temperature and humidity, food mec
 ### Setup
 To run the simulator copy project root folder and paste it in any sub-directory of your server's `HTDOCS`, and open `localhost` or whatever your host's URL is.
 
+After next few updates it will be possible to launch simulator with out server.
+
 ### Time Scale
 Year length (expressed in ticks) is specified in `sim.yearLength`. Ticks per second on standard (x1) speed is specified in `sim.fps`. Currently those values are 100 and 30, respectively. Note that year starts with summers (This may change soon).
-
-On standard speed simulator runs at 30 ticks per second.
 
 ## Simulator Mechanics
 
@@ -60,7 +45,7 @@ Food is divided into kinds (crops). Crops differ from each other. Tribes have th
 - Food kind's preferred humidity `kindHumdPref`: Crop's preferred humidity. Different for each crop kind.
 - Food kind's humidity tolerance `kindHumdTolr`: Defines how much humidity change affects food efficiency. Different for each crop kind.
 
-**Note** that those attributes are random. To specify value range change attributes with `Max` and `Spread` suffixes.
+**Note** that those attributes are random. To specify value range change attributes with `Min` and `Max` suffixes.
 
 Check **formulas section** to learn how much food tribe will actually receive.
 
@@ -76,7 +61,7 @@ Check **formulas section** to learn how much food tribe will actually receive.
 - Base humidity `baseHumd`: Constant added to humidity calculated from climate. Rationale: rivers and other water bodies increase humidity.
 - Loot recovery modifier `lootRecoveryFactor`: Modifies how fast tile can recover after it was looted.
 
-**Note** that those attributes are random. To specify value range change attributes with `Max` and `Spread` suffixes.
+**Note** that those attributes are random. To specify value range change attributes with `Min` and `Max` suffixes.
 
 Check **formulas section** to learn how current tile temperature and humidity is calculated.
 
@@ -136,7 +121,7 @@ Attributes, variables, actions
 ##### Base supported population
 
 ### Tribes
-##### Tile's population support multipier
+##### Tile's population support multiplier
 
 
 ## Modding
