@@ -14,15 +14,15 @@ function Tile(session, x, y) {
     };
     tile.getColor = function(mapMode) {
         var hue;
-        if (mapMode == "tileFertility") {
+        if (mapMode == "fert") {
             hue = mapValue(tile.fertility,
                 config.disp.repr.fertMin, config.disp.repr.fertMax,
                 config.disp.hueRed,config.disp.hueGreen);}
-        else if (mapMode == "currentTemp") {
+        else if (mapMode == "temp") {
             hue = mapValue(tile.temp,
                 config.disp.repr.tempMax, config.disp.repr.tempMin,
                 config.disp.hueRed, config.disp.hueGreen);}
-        else if (mapMode == "currentHumd") {
+        else if (mapMode == "humd") {
             hue = mapValue(tile.humd,
                 config.disp.repr.humdMax, config.disp.repr.humdMin,
                 config.disp.hueRed, config.disp.hueGreen);}

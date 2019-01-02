@@ -1,82 +1,125 @@
 html, body {
-    margin: 5px;
-    background-color: #222;
+    margin: 0px;
+    height: 100vh;
+    background-color: #000;
     color: #FFF;
-    font-family: monospace;
-    font-weight: bold;
+    font-family: sans-serif;
+    text-align: center;
     font-size: 16px;
     overflow-y: hidden;
+    line-height: 1.3;
+    letter-spacing: 0.048em;
 }
 
-#controls {
-    width: 95%;
-    height: 230px; /*Keep it smaller than config.disp.subtrH */
-    margin: auto;
-    text-align: center;
-    background-color: #333;
+#showBar {
+    display: none;
+}
+
+#uiBar {
+    background-color: #6F2D45;
+    border-bottom: 1px solid #FFF;
+    border-top: 1px solid #FFF;
+}
+
+#mainInfo {
+    background-color: #FFF;
+    padding: 5px;
+    color: #000;
+}
+
+span#date {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+#hideBar {
+    background-color: #90002A;
+    color: #FFF;
+    font-family: monospace;
+    font-size: 16px;
+    border-radius: 0px;
+    border: 0px;
+    border-bottom: 2px solid #000;
+    margin: 0px;
+}
+
+#hideBar:hover {
+    background-color: #A00830;
+}
+
+#mainCanvas {
+    background-color: #000;
     border: 1px solid #FFF;
-    overflow-y: scroll;
+}
+
+.menuSection {
+    border-top: 2px solid #000;
+    padding-top: 10px;
 }
 
 .cleaner {
     clear: both;
 }
 
-.controlGroup1 { /*Full-width column*/
-    width: calc(100% - 20px);
-    padding: 10px;
-    float: left;
-    margin: auto;
-}
-
-.controlGroup2 { /*Half-width column*/
-    width: calc(50% - 20px);
-    padding: 10px;
-    float: left;
-    margin: auto;
-}
-
-.controlGroup3 { /*Third-width column*/
-    width: calc(33% - 20px);
-    padding: 10px;
-    float: left;
-    margin: auto;
-}
-
-.groupLabel {
-    border-top: 1px dashed #DDD;
-    font-size: 22px;
-    font-family: Verdana;
-    font-weight: normal;
-    margin: 0px;
-    margin-top: 15px;
-    padding-top: 5px;
-    margin-bottom: 10px;
-}
-
-.onTop {
-    border-top: 0px;
-    margin-top: 0px;
-}
-
-input[type=range] {
-    width: calc(100% - 20px);
-    padding: 10px;
-    padding-top: 5px;
-    padding-bottom: 5px;
-    margin: auto;
-}
-
-input[type=text] {
-    text-align: center;
-    width: calc(90% - 10px);
-    margin: auto;
-    padding: 2px;
+span.output {
+    padding: 1px 5px;
+    background-color: #BF7D95;
     font-family: monospace;
+    border-radius: 5px;
     font-weight: bold;
+    font-size: 18px;
+}
+
+span.outputNoFS { /*Class output with no font-size setting
+    TODO: Repair this with some CSS pre-processor*/
+    padding: 1px 5px;
+    background-color: #BF7D95;
+    font-family: monospace;
+    border-radius: 5px;
+    font-weight: bold;
+}
+
+button {
+    text-align: center;
+    padding: 4px 10px;
+    margin: 3px;
+    border: 2px solid #000;
+    border-radius: 0px 8px;
+    font-size: 14px;
+    background-color: #FFF;
+}
+
+button:hover {
+    background-color: #CF8DA5;
+    cursor: pointer;
+}
+
+button.dark {
+    background-color: #222;
+    color: #FFF;
+}
+
+button.dark:hover {
+    background-color: #7F4D60;
+}
+
+button.menu {
+    width: calc(100% - 30px);
+}
+
+p {
+    margin: 1px;
+}
+
+p.subcat {
+    margin-top: 10px;
     font-size: 16px;
 }
-input[type="text"]:disabled {
-    background-color: #D0D0D0;
-    color: #000;
+
+h3 {
+    margin: 2px;
+    font-size: 20px;
+    letter-spacing: 0.06em;
+    padding: 0px;
+    font-weight: normal;
 }

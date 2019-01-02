@@ -3,6 +3,7 @@
     <head>
         <meta charset="utf-8"/>
         <link rel="stylesheet" href="css/master.css">
+        <link rel="stylesheet" id="styleVariant">
     </head>
     <?php
     # Creates script at refresh, loading
@@ -19,36 +20,47 @@
     <script src="js/climate.js"></script>
     <script src="js/session.js"></script>
     <body>
-        <div id="config"></div>
         <canvas id="mainCanvas"></canvas>
-        <div id="controls">
-            <div class="controlGroup2">
-                <p class="groupLabel onTop">Year & Season</p>
-                Year <span id="yearNumber"></span>
-                <span id="seasonName"></span>
-                <p class="groupLabel">View controls</p>
-                View Zoom (<span id="zoomSliderLabel"></span>%)
-                <input type="range" min="0" max="99" id="viewZoomSlider">
-                Mapmode<br>
-                <input type="radio" name="mapModeRadio" value="currentTemp"> Temperature
-                <input type="radio" name="mapModeRadio" value="currentHumd"> Humidity<br/>
-                <input type="radio" name="mapModeRadio" value="tileFertility"> Fertility<br/>
+        <div id="showBar"></div>
+        <div id="uiBar">
+            <button id="hideBar"> Hide </button>
+            <div id="mainInfo">
+                <span id="date">
+                    <p>Year <span id="outputYear" class="outputNoFS"></span>
+                    <span id="outputSeason" class="outputNoFS"></span><br/></p>
+                </span>
+                <button id="toggleStyle">Toggle bar position</button>
+                <p class="subcat">Map Zoom
+                    <span id="outputZoom" class="output"></span></p>
+                <input type="range" id="controlZoom">
+                <p class="subcat">Menus</p>
+                <button id="vievMapModes" class="dark menu">Map Modes</button>
+                <button id="vievTileInfo" class="dark menu">Tile Info</button>
+                <button id="vievSimSettings" class="dark menu">Simulation Settings</button>
             </div>
-            <div class="controlGroup2">
-                <p class="groupLabel onTop">Hovered Tile</p>
-                Index<br/>
-                <input type="text" id="hoveredTileIndex"><br/>
-                Temperature<br/>
-                <input type="text" id="hoveredTileTemp"><br/>
-                Humidity<br/>
-                <input type="text" id="hoveredTileHumd"><br/>
-                Fertility<br/>
-                <input type="text" id="hoveredTileFert"><br/>
-                <p class="groupLabel">View position</p>
-                <input type="text" id="viewShift"><br/>
+
+            <div id="sectionMapmodes" class="menuSection">
+                <h3>Map Modes</h3>
+                <p class="subcat">Tile attributes</p>
+                <button id="mapModeTemp" class="menu">Temperature</button>
+                <button id="mapModeHumd" class="menu">Humidity</button>
+                <button id="mapModeFert" class="menu">Soil Fertility</button>
+                <p class="subcat">Other mapmode types...</p>
             </div>
-            <div class="cleaner"></div>
+
+            <div id="sectionTileInfo" class="menuSection">
+                <h3>Tile Info</h3>
+                <p class="subcat">Index</p>
+                <span id="outputIndex" class="output"></span>
+                <p class="subcat">Temperature</p>
+                <span id="outputTemp" class="output"></span>
+                <p class="subcat">Humidity</p>
+                <span id="outputHumd" class="output"></span>
+                <p class="subcat">Soil Fertility</p>
+                <span id="outputFert" class="output"></span>
+            </div>
         </div>
+        <div class="cleaner"></div>
         <script src="js/launch.js"></script>
     </body>
 </html>

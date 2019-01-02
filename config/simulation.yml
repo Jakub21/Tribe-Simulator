@@ -2,19 +2,17 @@
 
 # ----------------------------------------------------------------
 sim:
-    fps: 30
-    yearLength: 100
+    fps: 60
+    yearLength: 200
 
 # ----------------------------------------------------------------
 disp:
     baseTileSize: 55
-    subtrW: 20
-    subtrH: 250 # Change css #controls height when changing this
     zoomMin: 0.15
-    zoomMax: 1.2
-    zoomDefault: 0.4 # NOTE: Set this to 1
-    startViewX: -92 # NOTE: Set this to 0
-    startViewY: -30 # NOTE: Set this to 0
+    zoomMax: 1.24
+    zoomDefault: 1
+    startViewX: 0
+    startViewY: 0
     hueRed: 10
     hueGreen: 100
     repr:
@@ -26,6 +24,14 @@ disp:
         humdMax: 100
         tileSat: 80
         tileLum: 40
+    style: # Style canvas
+        # Styling in CSS causes canvas to scale instead of change its boundaries
+        # Styling had to be moved to JS
+        verPercH: 80 # Vertical view: Height [Percentage]
+        verSubtr: 45 # Vertical view: Subract from Height [Pixels]
+        horPercW: 80 # Horizontal view: Width [Percentage]
+        horSubtr: 0 # Horizontal view: Subrtact from Width [Pixels]
+        bodyMargin: 2 # Margin of elements present in both views [Pixels]
     season: [
         Summer, Autumn, Winter, Spring]
 
@@ -67,11 +73,11 @@ tile:
 
 # ----------------------------------------------------------------
 climate:
-    baseTemp: 10
+    baseTemp: 8
     baseGhg: 1
     baseHumd: 50
     # Amplitudes
-    tempSeasonAmp: 12
+    tempSeasonAmp: 20
     humdSeasonAmp: 35
     tempLocalAmp: 2
     humdLocalAmp: 5

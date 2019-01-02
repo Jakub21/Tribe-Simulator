@@ -1,0 +1,20 @@
+#uiBar {
+    width: 20%;
+    height: calc(100vh - 2px);
+    float: left;
+}
+
+#mainInfo {
+    width: calc(100% - 10px);
+}
+
+#hideBar {
+    width: 100%;
+}
+
+input[type="range"] {
+    width: calc(80% - 10px);
+    padding: 5px;
+    background-color: #222;
+    border-radius: 15px;
+}

@@ -6,14 +6,14 @@ function Session(canvasId) {
     var session = {
         canvas: document.getElementById(canvasId),
         tick: 0,
-        year: 1,
+        year: 0,
         fps: config.sim.fps,
         tiles: [],
         foodKinds: [],
         width: randint(config.map.widthMin, config.map.widthMax),
         height: randint(config.map.heightMin, config.map.heightMax),
         view: {x: config.disp.startViewX, y:config.disp.startViewY, zoom:1, mapMode: ""},
-        brokenLoop: false,
+        styleVariant: "h",
         pointedTile: -1, // TEMP
         clickedTiles: [] // TEMP
     };
@@ -23,20 +23,37 @@ function Session(canvasId) {
         session.interval = setInterval(session.update, int(1000/session.fps));
     }
 
+    session.toggleStyle = function() {
+        var path;
+        if (session.styleVariant == "h") {
+            session.styleVariant = "v";
+            path = "css/vertical.css";
+        }
+        else if (session.styleVariant == "v") {
+            session.styleVariant = "h";
+            path = "css/horizontal.css";
+        }
+        document.getElementById("styleVariant").setAttribute("href", path);
+    }
+
     session.prepareDoc = function() { // Prepares HTML
-        document.getElementById("hoveredTileIndex").disabled = true;
-        document.getElementById("viewShift").disabled = true;
-        document.getElementById("hoveredTileTemp").disabled = true;
-        document.getElementById("hoveredTileHumd").disabled = true;
-        document.getElementById("hoveredTileFert").disabled = true;
+        session.toggleStyle();
+        document.getElementById("toggleStyle").onclick = session.toggleStyle
+        document.getElementById("mapModeTemp").onclick = function(){session.toggleMapMode("temp");};
+        document.getElementById("mapModeHumd").onclick = function(){session.toggleMapMode("humd");};
+        document.getElementById("mapModeFert").onclick = function(){session.toggleMapMode("fert");};
         var zoom = mapValue(config.disp.zoomDefault, 0, config.disp.zoomMax, 0, 100);
-        document.getElementById("viewZoomSlider").value = zoom;
+        document.getElementById("outputZoom").value = zoom;
+    }
+
+    session.toggleMapMode = function(mapmode) {
+        session.view.mapMode = mapmode;
     }
 
     session.update = function() {
-        if (session.brokenLoop) {clearInterval(session.interval); return;}
         session.tick += 1;
         if (session.tick % config.sim.yearLength == 0) {session.year += 1;}
+        session.updateCanvasSize();
         session.readControls();
         session.updateControlsLabels();
         session.climate.update();
@@ -44,39 +61,52 @@ function Session(canvasId) {
         session.updateScreen();
     }
 
+    session.updateCanvasSize = function() {
+        if (session.styleVariant == "h") {
+            session.canvas.setAttribute("width", document.documentElement.clientWidth -
+                config.disp.style.bodyMargin);
+            session.canvas.setAttribute("height", document.documentElement.clientHeight *
+                (config.disp.style.verPercH / 100) - config.disp.style.bodyMargin -
+                config.disp.style.verSubtr);
+        }
+        else if (session.styleVariant == "v") {
+            session.canvas.setAttribute("width", document.documentElement.clientWidth *
+                (config.disp.style.horPercW / 100) - config.disp.style.bodyMargin -
+                config.disp.style.horSubtr);
+            session.canvas.setAttribute("height", document.documentElement.clientHeight -
+                config.disp.style.bodyMargin);
+        }
+    }
+
     session.updateControlsLabels = function() {
-        document.getElementById("yearNumber").innerHTML = session.year;
+        document.getElementById("outputYear").innerHTML = session.year;
         var seasonIndex=0, seasonName;
         var yearTick = session.tick%config.sim.yearLength;
         var seasonLength = config.sim.yearLength / 4;
         while (yearTick > seasonLength) {seasonIndex += 1; yearTick -= seasonLength;}
         var seasonName = config.disp.season[seasonIndex];
-        document.getElementById("seasonName").innerHTML = seasonName;
+        document.getElementById("outputSeason").innerHTML = seasonName;
         var humanizedZoom = int(session.view.zoom * 100);
-        document.getElementById("zoomSliderLabel").innerHTML = humanizedZoom;
+        document.getElementById("outputZoom").innerHTML = humanizedZoom;
         var pt = session.pointedTile;
-        document.getElementById("hoveredTileIndex").value = pt;
+        document.getElementById("outputIndex").innerHTML = pt;
         if ((pt >= 0) && (pt < session.width*session.height)) {
-            document.getElementById("hoveredTileTemp").value = fRound(session.tiles[pt].temp);
-            document.getElementById("hoveredTileHumd").value = fRound(session.tiles[pt].humd);
-            document.getElementById("hoveredTileFert").value = fRound(session.tiles[pt].fertility);
-            document.getElementById("viewShift").value = `x = ${session.view.x}` +
-            `, y = ${session.view.y}`;
+            document.getElementById("outputTemp").innerHTML = fRound(session.tiles[pt].temp);
+            document.getElementById("outputHumd").innerHTML = fRound(session.tiles[pt].humd);
+            document.getElementById("outputFert").innerHTML = fRound(session.tiles[pt].fertility);
+            //document.getElementById("viewShift").value = `x = ${session.view.x}` +
+            //`, y = ${session.view.y}`;
         }
         else {
-            document.getElementById("hoveredTileTemp").value = "";
-            document.getElementById("hoveredTileHumd").value = "";
-            document.getElementById("hoveredTileFert").value = "";
+            document.getElementById("outputTemp").innerHTML = "";
+            document.getElementById("outputHumd").innerHTML = "";
+            document.getElementById("outputFert").innerHTML = "";
         }
     }
 
     session.readControls = function() {
-        var zoom = document.getElementById("viewZoomSlider").value;
+        var zoom = document.getElementById("controlZoom").value;
         session.view.zoom = mapValue(zoom, 0, 99, config.disp.zoomMin, config.disp.zoomMax);
-        var radios = document.getElementsByName("mapModeRadio");
-        for (var i = 0; i < radios.length; i+= 1) {
-            if (radios[i].checked) {session.view.mapMode=radios[i].value; break;}
-        }
     }
 
     session.updateTiles = function() {
@@ -86,9 +116,6 @@ function Session(canvasId) {
     }
 
     session.updateScreen = function() {
-        // Update canvas size (in case window size changed, this is necessary)
-        session.canvas.setAttribute("width", document.documentElement.clientWidth-config.disp.subtrW);
-        session.canvas.setAttribute("height", document.documentElement.clientHeight-config.disp.subtrH);
         session.showTiles();
     }
 

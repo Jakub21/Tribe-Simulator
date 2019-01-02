@@ -1,0 +1,8 @@
+#uiBar {
+    width: calc(100% - 2px);
+    height: 20vh;
+}
+
+#mainInfo {
+    width: 100%;
+}
