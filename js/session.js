@@ -18,6 +18,38 @@ function Session(canvasId) {
         clickedTiles: [] // TEMP
     };
 
+    self.construct = function() {
+        noise.seed(random(0, 1));
+        self.climate = Climate(self);
+        // Fill foodKinds array
+        for (var i = 0; i < config.food.kindsAmount; i+= 1) {
+            self.foodKinds.push(FoodKind(self));
+        }
+        // Fill tiles array
+        for (var y = 0; y < self.height; y+= 1) {
+            for (var x = 0; x < self.width; x+= 1) {
+                var foodIndex = randint(0, config.food.kindsAmount);
+                var fert = noise.perlin2(x/15, y/15);
+                fert = mapValue(fert, -1, 1,
+                    config.tile.baseFertilityMin, config.tile.baseFertilityMax);
+                self.tiles.push(Tile(self, x, y, fert, self.foodKinds[foodIndex]));
+            }
+        }
+        noise.seed(random(0, 1));
+        for (var y = 0; y < self.height; y+= 1) {
+            for (var x = 0; x < self.width; x+= 1) {
+                var index = getIndex(x, y, self.width);
+                var humd = noise.perlin2(x/17, y/17);
+                self.tiles[index].baseHumd = mapValue(humd, -1, 1,
+                    config.tile.baseHumdMin, config.tile.baseHumdMax);
+            }
+        }
+        // Setup event handlers
+        self.canvas.addEventListener('mousemove', self.handlerMouseMove);
+        self.canvas.addEventListener("mousedown", self.handlerMouseClick);
+        self.canvas.addEventListener("mouseup", self.handlerMouseUnclick);
+    }
+
     self.startLoop = function() {
         self.prepareDoc();
         self.interval = setInterval(self.update, int(1000/self.fps));
@@ -225,24 +257,6 @@ function Session(canvasId) {
         }
     }
 
-    /* --------------------------------
-    * Constructor
-    */
-    self.climate = Climate(self);
-    // Fill foodKinds array
-    for (var i = 0; i < config.food.kindsAmount; i+= 1) {
-        self.foodKinds.push(FoodKind(self));
-    }
-    // Fill tiles array
-    for (var y = 0; y < self.height; y+= 1) {
-        for (var x = 0; x < self.width; x+= 1) {
-            var foodIndex = randint(0, config.food.kindsAmount);
-            self.tiles.push(Tile(self, x, y, self.foodKinds[foodIndex]));
-        }
-    }
-    // Setup event handlers
-    self.canvas.addEventListener('mousemove', self.handlerMouseMove);
-    self.canvas.addEventListener("mousedown", self.handlerMouseClick);
-    self.canvas.addEventListener("mouseup", self.handlerMouseUnclick);
+    self.construct();
     return self;
 }

@@ -2,7 +2,7 @@
 /* ----------------------------------------------------------------
 * Tile class
 */
-function Tile(session, x, y) {
+function Tile(session, x, y, baseFertility, foodKind) {
     var self = {
         x: x,
         y: y,
@@ -10,7 +10,9 @@ function Tile(session, x, y) {
         temp: 10,
         humd: 50,
         tempDeviation: 0,
-        humdDeviation: 0
+        humdDeviation: 0,
+        fertility: baseFertility,
+        foodKind: foodKind
     };
     self.getColor = function(mapMode) {
         var hue;
@@ -53,8 +55,6 @@ function Tile(session, x, y) {
         if (self.humd < 0) self.humd = 0;
         if (self.humd > 100) self.humd = 100;
     }
-    self.fertility = random(config.tile.baseFertilityMin, config.tile.baseFertilityMax);
-    self.baseHumd = random(config.tile.baseHumdMin, config.tile.baseHumdMax);
     self.lootRecoveryFactor = random(config.tile.lootRecoverydMin, config.tile.lootRecoveryMax);
     return self;
 }

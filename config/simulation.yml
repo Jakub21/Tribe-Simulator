@@ -66,8 +66,9 @@ tile:
     # Tile - specific randomized attributes
     baseFertilityMin: 0.7
     baseFertilityMax: 1.3
-    baseHumdMin: -5
-    baseHumdMax: 5
+    fertilityNoiseStep: 0.15
+    baseHumdMin: -15
+    baseHumdMax: 15
     lootRecoveryFactorMin: 0.8
     lootRecoveryFactorMax: 1.2
 
@@ -80,7 +81,7 @@ climate:
     tempSeasonAmp: 20
     humdSeasonAmp: 35
     tempLocalAmp: 2
-    humdLocalAmp: 5
+    humdLocalAmp: 2
     localAmpIncrease: 0.3
     event:
         globalDrought:

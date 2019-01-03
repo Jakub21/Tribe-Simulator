@@ -21,8 +21,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 --------------------------------
-Third party software
-This software was used in this project and is included in it until better way to link libraries is found.
+Third party software:
+This software is required to run this project and is included in the repository.
 ----------------
 js-YAML library was downloaded from GitHub Nodeca
 published under MIT License
@@ -31,4 +31,8 @@ repository link: https://github.com/nodeca/js-yaml
 jQuery library was downloaded from GitHub jQuery
 published under MIT License
 repository link: https://github.com/jquery/jquery
+----------------
+Perlin/Simplex noise generator was downloaded from GitHub josephg
+published under ISC License
+repository link: https://github.com/josephg/noisejs
 ----------------

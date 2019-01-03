@@ -14,6 +14,7 @@
     <script src="js/lib/jquery.js"></script>
     <script src="js/lib/js-yaml.js"></script>
     <script src="js/lib/easyscript.js"></script>
+    <script src="js/lib/perlinNoise.js"></script>
     <script src="js/loadConfig.js"></script>
     <script src="js/foodKind.js"></script>
     <script src="js/mapTile.js"></script>
