@@ -3,16 +3,16 @@
 * FoodKind class
 */
 function FoodKind(session) {
-    var foodKind = {
+    var self = {
         session: session
     };
-    foodKind.getEfficiency = function(temp, humd) {
+    self.getEfficiency = function(temp, humd) {
         return 1; // TODO
     }
-    foodKind.efficiency = random(config.food.kindEffMin, config.food.kindEffMax);
-    foodKind.tempPref = random(config.food.kindTempPrefMin, config.food.kindTempPrefMax);
-    foodKind.tempTol = random(config.food.kindTempTolrMin, config.food.kindTempTolrMax);
-    foodKind.humdPref = random(config.food.kindHumdPrefMin, config.food.kindHumdPrefMax);
-    foodKind.humdTol = random(config.food.kindHumdTolrMin, config.food.kindHumdTolrMax);
-    return foodKind;
+    self.efficiency = random(config.food.kindEffMin, config.food.kindEffMax);
+    self.tempPref = random(config.food.kindTempPrefMin, config.food.kindTempPrefMax);
+    self.tempTol = random(config.food.kindTempTolrMin, config.food.kindTempTolrMax);
+    self.humdPref = random(config.food.kindHumdPrefMin, config.food.kindHumdPrefMax);
+    self.humdTol = random(config.food.kindHumdTolrMin, config.food.kindHumdTolrMax);
+    return self;
 }
