@@ -9,8 +9,6 @@ function Tile(session, x, y, baseFertility, foodKind) {
         session: session,
         temp: 10,
         humd: 50,
-        tempDeviation: 0,
-        humdDeviation: 0,
         fertility: baseFertility,
         foodKind: foodKind
     };
@@ -31,30 +29,23 @@ function Tile(session, x, y, baseFertility, foodKind) {
         else {return "#444"}
         return fromHsl(hue, config.disp.repr.tileSat, config.disp.repr.tileLum);
     }
-    self.randomizeDeviations = function() {
-        self.tempDeviation += random(-config.climate.localAmpIncrease,
-            config.climate.localAmpIncrease);
-        self.humdDeviation += random(-config.climate.localAmpIncrease,
-            config.climate.localAmpIncrease);
-        if (self.tempDeviation > config.climate.tempLocalAmp)
-            self.tempDeviation = config.climate.tempLocalAmp;
-        else if (self.tempDeviation < -config.climate.tempLocalAmp)
-            self.tempDeviation = -config.climate.tempLocalAmp;
-        if (self.humdDeviation > config.climate.humdLocalAmp)
-            self.humdDeviation = config.climate.humdLocalAmp;
-        else if (self.humdDeviation < -config.climate.humdLocalAmp)
-            self.humdDeviation = -config.climate.humdLocalAmp;
-        // TODO: Replace this with what was described in docs and use values from config
-    }
     self.update = function() {
-        var climTemp = self.session.climate.getTemp(x, y);
-        var climHumd = self.session.climate.getHumd(x, y) + self.baseHumd;
-        self.randomizeDeviations();
-        self.temp = climTemp + self.tempDeviation;
-        self.humd = climHumd + self.humdDeviation;
+        var x = self.x;
+        var y = self.y;
+        var cc = config.climate;
+        var cl = self.session.climate;
+        var climTemp = cl.getTemp(x, y);
+        var climHumd = cl.getHumd(x, y);
+        noise.seed(cl.termPatternSeed);
+        var tempNoise = noise.perlin2((x/cc.perlinClimate) + cl.dvtShift.x,
+            (y/cc.perlinClimate) + cl.dvtShift.y) * cc.tempLocalAmp;
+        self.temp = climTemp + tempNoise;
+        noise.seed(cl.humdPatternSeed);
+        var humdNoise = noise.perlin2((x/cc.perlinClimate) + cl.dvtShift.x,
+            (y/cc.perlinClimate) + cl.dvtShift.y) * cc.humdLocalAmp;
+        self.humd = climHumd + humdNoise;
         if (self.humd < 0) self.humd = 0;
         if (self.humd > 100) self.humd = 100;
     }
-    self.lootRecoveryFactor = random(config.tile.lootRecoverydMin, config.tile.lootRecoveryMax);
     return self;
 }

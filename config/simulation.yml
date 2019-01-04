@@ -15,8 +15,8 @@ disp:
     zoomDefault: 1
     startViewX: 0
     startViewY: 0
-    hueRed: 10
-    hueGreen: 100
+    hueRed: 0
+    hueGreen: 80
     repr:
         fertMin: 0.6
         fertMax: 1.5
@@ -69,20 +69,26 @@ tile:
     fertilityNoiseStep: 0.15
     baseHumdMin: -15
     baseHumdMax: 15
-    lootRecoveryFactorMin: 0.8
-    lootRecoveryFactorMax: 1.2
 
 # ----------------------------------------------------------------
 climate:
-    baseTemp: 8
+    baseTemp: 1
     baseGhg: 1
-    baseHumd: 50
+    baseHumd: 30
+    # Perlin Noise
+    perlinClimate: 17
+    perlinFert: 22
+    maxDvtShiftStep: 0.002
+    maxDvtVel: 0.01
+    negShiftFactor: 0.85
+    # Location - depended
+    lngTempFactor: 20
+    latHumdFactor: 40
     # Amplitudes
-    tempSeasonAmp: 20
-    humdSeasonAmp: 35
-    tempLocalAmp: 2
-    humdLocalAmp: 2
-    localAmpIncrease: 0.3
+    tempSeasonAmp: 10
+    humdSeasonAmp: 20
+    tempLocalAmp: 4
+    humdLocalAmp: 12
     event:
         globalDrought:
             minInterval: 2000 # 2000 -> 20 yrs

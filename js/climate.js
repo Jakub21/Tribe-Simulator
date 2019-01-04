@@ -9,22 +9,47 @@ function Climate(session) {
         temp: config.climate.baseTemp,
         humd: config.climate.baseHumd,
         greenhouse: config.climate.baseGhg,
+        termPatternSeed: random(0, 1),
+        humdPatternSeed: random(0, 1),
+        dvtVelocity: {x: 0, y: 0},
+        dvtShift: {x: 0, y:0},
     };
     self.update = function() {
         self.season += 1;
         self.season %= config.sim.yearLength;
         self.seasonTemp = Math.sin(self.season*2*Math.PI/config.sim.yearLength) *
-            config.climate.tempSeasonAmp + config.climate.baseTemp;
+            config.climate.tempSeasonAmp;
         self.seasonHumd = Math.sin(self.season*2*Math.PI/config.sim.yearLength) *
-            config.climate.humdSeasonAmp + config.climate.baseHumd;
+            config.climate.humdSeasonAmp;
+        self.updateDvtShifts()
+    }
+    self.updateDvtShifts = function() {
+        var cc = config.climate;
+        var maxVel = cc.maxDvtVel;
+        var xStep = random(-cc.maxDvtShiftStep*cc.negShiftFactor, cc.maxDvtShiftStep);
+        var yStep = random(-cc.maxDvtShiftStep*cc.negShiftFactor, cc.maxDvtShiftStep);
+        self.dvtVelocity.x += xStep;
+        self.dvtVelocity.y += yStep;
+        if (self.dvtVelocity.x > maxVel) self.dvtVelocity.x = maxVel;
+        if (self.dvtVelocity.y > maxVel) self.dvtVelocity.y = maxVel;
+        if (self.dvtVelocity.x < -maxVel) self.dvtVelocity.x = -maxVel;
+        if (self.dvtVelocity.y < -maxVel) self.dvtVelocity.y = -maxVel;
+        self.dvtShift.x += self.dvtVelocity.x;
+        self.dvtShift.y += self.dvtVelocity.y;
+
     }
     self.getTemp = function(x, y) {
-        var lngTemp = (y/self.session.height) * 40 - 10;
-        return self.seasonTemp*0.7 + lngTemp*0.3;
+        var cc = config.climate;
+        var lngRatio = y/self.session.height;
+        var lngTemp = lngRatio * cc.lngTempFactor;
+        return lngTemp + self.seasonTemp + cc.baseTemp;
+
     }
     self.getHumd = function(x, y) {
-        var latHumd = (x/self.session.width) * 50 + 25;
-        return self.seasonHumd*0.4 + latHumd*0.6;
+        var cc = config.climate;
+        var latRatio = x/self.session.width;
+        var latHumd = latRatio * cc.latHumdFactor;
+        return latHumd + self.seasonHumd + cc.baseHumd;
     }
     return self;
 }

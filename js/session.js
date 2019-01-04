@@ -29,7 +29,7 @@ function Session(canvasId) {
         for (var y = 0; y < self.height; y+= 1) {
             for (var x = 0; x < self.width; x+= 1) {
                 var foodIndex = randint(0, config.food.kindsAmount);
-                var fert = noise.perlin2(x/15, y/15);
+                var fert = noise.perlin2(x/config.climate.perlinFert, y/config.climate.perlinFert);
                 fert = mapValue(fert, -1, 1,
                     config.tile.baseFertilityMin, config.tile.baseFertilityMax);
                 self.tiles.push(Tile(self, x, y, fert, self.foodKinds[foodIndex]));
@@ -175,8 +175,6 @@ function Session(canvasId) {
             document.getElementById("outputTemp").innerHTML = fRound(self.tiles[pt].temp);
             document.getElementById("outputHumd").innerHTML = fRound(self.tiles[pt].humd);
             document.getElementById("outputFert").innerHTML = fRound(self.tiles[pt].fertility);
-            //document.getElementById("viewShift").value = `x = ${self.view.x}` +
-            //`, y = ${self.view.y}`;
         }
         else {
             document.getElementById("outputTemp").innerHTML = "";
