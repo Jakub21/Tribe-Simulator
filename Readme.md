@@ -7,7 +7,7 @@
 **GitHub**: https://github.com/Jakub21  
 **Repository**: https://github.com/Jakub21/Tribe-Simulator  
 **License**: MIT license  
-**Doc Version**: Markdown 0.1.2  
+**Doc Version**: Markdown 0.1.3  
 
 Text marked as `inline code` indicates reference to configuration keys. This makes this document useful for users that want modify the simulator.
 
@@ -58,8 +58,6 @@ Check **formulas section** to learn how much food tribe will actually receive.
 
 **Tile-specific attributes**:
 - Base fertility `baseFertility`: How efficiently food will grow on this tile.
-- Base humidity `baseHumd`: Constant added to humidity calculated from climate. Rationale: rivers and other water bodies increase humidity.
-- Loot recovery modifier `lootRecoveryFactor`: Modifies how fast tile can recover after it was looted.
 
 **Note** that those attributes are random. To specify value range change attributes with `Min` and `Max` suffixes.
 
@@ -79,6 +77,8 @@ Check **formulas section** to learn how current tile temperature and humidity is
 `references in this section are to climate namespace`
 
 Climate controls temperature and humidity variables of every tile. Climate changes in time (see climate variables).
+
+**TODO**: Describe temp and humidity noise moving across the map
 
 **Climate attributes**:
 - Base temperature `baseTemp`: Average temperature on map
