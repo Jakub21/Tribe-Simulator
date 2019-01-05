@@ -12,7 +12,7 @@ function Session(canvasId) {
         foodKinds: [],
         width: randint(config.map.widthMin, config.map.widthMax),
         height: randint(config.map.heightMin, config.map.heightMax),
-        view: {x: config.disp.startViewX, y:config.disp.startViewY, zoom:1, mapMode: ""},
+        view: {x: config.disp.startViewX, y:config.disp.startViewY, zoom:1, mapMode: "temp"},
         barVisible: true,
         pointedTile: -1, // TEMP
         clickedTiles: [] // TEMP

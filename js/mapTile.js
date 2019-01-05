@@ -27,6 +27,7 @@ function Tile(session, x, y, baseFertility, foodKind) {
                 config.disp.repr.humdMax, config.disp.repr.humdMin,
                 config.disp.hueRed, config.disp.hueGreen);}
         else {return "#444"}
+        if (hue > 110) hue += 20;
         return fromHsl(hue, config.disp.repr.tileSat, config.disp.repr.tileLum);
     }
     self.update = function() {

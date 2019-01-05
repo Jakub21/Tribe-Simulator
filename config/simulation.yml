@@ -16,7 +16,7 @@ disp:
     startViewX: 0
     startViewY: 0
     hueRed: 0
-    hueGreen: 80
+    hueGreen: 190
     repr:
         fertMin: 0.6
         fertMax: 1.5
@@ -87,8 +87,8 @@ climate:
     # Amplitudes
     tempSeasonAmp: 10
     humdSeasonAmp: 20
-    tempLocalAmp: 4
-    humdLocalAmp: 12
+    tempLocalAmp: 8
+    humdLocalAmp: 21
     event:
         globalDrought:
             minInterval: 2000 # 2000 -> 20 yrs

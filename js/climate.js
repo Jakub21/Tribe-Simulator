@@ -47,7 +47,7 @@ function Climate(session) {
     }
     self.getHumd = function(x, y) {
         var cc = config.climate;
-        var latRatio = x/self.session.width;
+        var latRatio = (self.session.width-x)/self.session.width;
         var latHumd = latRatio * cc.latHumdFactor;
         return latHumd + self.seasonHumd + cc.baseHumd;
     }
