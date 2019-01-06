@@ -10,7 +10,8 @@ function Tile(session, x, y, baseFertility, foodKind) {
         temp: 10,
         humd: 50,
         fertility: baseFertility,
-        foodKind: foodKind
+        foodKind: foodKind,
+        erosion: 0
     };
     self.getColor = function(mapMode) {
         var hue;
@@ -38,12 +39,12 @@ function Tile(session, x, y, baseFertility, foodKind) {
         var climTemp = cl.getTemp(x, y);
         var climHumd = cl.getHumd(x, y);
         noise.seed(cl.termPatternSeed);
-        var tempNoise = noise.perlin2((x/cc.perlinClimate) + cl.dvtShift.x,
-            (y/cc.perlinClimate) + cl.dvtShift.y) * cc.tempLocalAmp;
+        var tempNoise = noise.perlin2((x/cc.climNoise) + cl.cloudShift.x,
+            (y/cc.climNoise) + cl.cloudShift.y) * cc.tempLocalAmp;
         self.temp = climTemp + tempNoise;
         noise.seed(cl.humdPatternSeed);
-        var humdNoise = noise.perlin2((x/cc.perlinClimate) + cl.dvtShift.x,
-            (y/cc.perlinClimate) + cl.dvtShift.y) * cc.humdLocalAmp;
+        var humdNoise = noise.perlin2((x/cc.climNoise) + cl.cloudShift.x,
+            (y/cc.climNoise) + cl.cloudShift.y) * cc.humdLocalAmp;
         self.humd = climHumd + humdNoise;
         if (self.humd < 0) self.humd = 0;
         if (self.humd > 100) self.humd = 100;

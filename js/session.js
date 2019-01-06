@@ -29,7 +29,7 @@ function Session(canvasId) {
         for (var y = 0; y < self.height; y+= 1) {
             for (var x = 0; x < self.width; x+= 1) {
                 var foodIndex = randint(0, config.food.kindsAmount);
-                var fert = noise.perlin2(x/config.climate.perlinFert, y/config.climate.perlinFert);
+                var fert = noise.perlin2(x/config.tile.fertNoise, y/config.tile.fertNoise);
                 fert = mapValue(fert, -1, 1,
                     config.tile.baseFertilityMin, config.tile.baseFertilityMax);
                 self.tiles.push(Tile(self, x, y, fert, self.foodKinds[foodIndex]));
