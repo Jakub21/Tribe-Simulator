@@ -11,7 +11,6 @@
     $yaml = file_get_contents("config/simulation.yml");
     echo '<textarea id="config" class="hidden">'.$yaml.'</textarea>';
     ?>
-    <script src="js/lib/jquery.js"></script>
     <script src="js/lib/js-yaml.js"></script>
     <script src="js/lib/easyscript.js"></script>
     <script src="js/lib/perlinNoise.js"></script>
