@@ -37,6 +37,11 @@ function mapValue(value, origMin, origMax, targetMin, targetMax) {
     return perc * targetScope + targetMin;
 }
 
+// Absolute value
+function abs(number) {
+    return Math.abs(number);
+}
+
 // Converts HSL to Hex RGB
 // Copied from StackOverflow
 // https://stackoverflow.com/a/44134328

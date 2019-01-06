@@ -47,18 +47,25 @@ map:
 # ----------------------------------------------------------------
 food:
     baseEff: 1
+    foodKindNoise: 8
     # Defining food kinds
     kindsAmount: 100
     kindEffMin: 0.9
     kindEffMax: 1.3
+    # Temp: Preferred / Tolerance
     kindTempPrefMin: 10
     kindTempPrefMax: 20
-    kindTempTolrMin: 0.5
-    kindTempTolrMax: 1.2
+    kindTempTolrMin: 3
+    kindTempTolrMax: 5
+    # Humidity: Preferred / Tolerance
     kindHumdPrefMin: 40
     kindHumdPrefMax: 80
-    kindHumdTolrMin: 1.4
-    kindHumdTolrMax: 2
+    kindHumdTolrMin: 7
+    kindHumdTolrMax: 26
+    specific:
+        startStrength: 50
+        maxStrength: 100
+        moveStrength: 70 # Strength required to duplicate
 
 # ----------------------------------------------------------------
 tile:

@@ -46,11 +46,12 @@
 
             <div id="sectionMapmodes" class="menuSection">
                 <h3>Map Modes</h3>
-                <p class="subcat">Tile attributes</p>
+                <p class="subcat">Tiles</p>
                 <button id="mapModeTemp" class="menu">Temperature</button>
                 <button id="mapModeHumd" class="menu">Humidity</button>
                 <button id="mapModeFert" class="menu">Soil Fertility</button>
-                <p class="subcat">SubCategory</p>
+                <p class="subcat">Foods</p>
+                <button id="mapModefoodKind" class="menu">Food Kind</button>
             </div>
 
             <div id="sectionTileInfo" class="menuSection">
@@ -63,6 +64,12 @@
                 <span id="outputHumd" class="output"></span>
                 <p class="subcat">Soil Fertility</p>
                 <span id="outputFert" class="output"></span>
+                <p class="subcat">Food Kind</p>
+                <span id="outputFoodIndex" class="output"></span>
+                <p class="subcat">Pref Temp</p>
+                <span id="outputFoodPrefTemp" class="output"></span>
+                <p class="subcat">Strength</p>
+                <span id="outputFoodStrength" class="output"></span>
             </div>
 
             <div id="sectionSettings" class="menuSection">

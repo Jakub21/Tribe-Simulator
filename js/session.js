@@ -13,8 +13,17 @@ function Session(canvasId) {
         foodKinds: [],
         width: randint(config.map.widthMin, config.map.widthMax),
         height: randint(config.map.heightMin, config.map.heightMax),
-        view: {x: config.disp.startViewX, y:config.disp.startViewY, zoom:1, mapMode: "temp"},
+        view: {x: config.disp.startViewX, y:config.disp.startViewY, zoom:1, mapMode: "foodKind"},
         barVisible: true,
+        seeds: {
+            foodKind: random(0, 1),
+            fertility: random(0, 1),
+            fkEfficiency: random(0, 1),
+            fkTempPref: random(0, 1),
+            fkTempTol: random(0, 1),
+            fkHumdPref: random(0, 1),
+            fkHumdTol: random(0, 1)
+        },
         pointedTile: -1, // TEMP
         clickedTiles: [] // TEMP
     };
@@ -24,16 +33,28 @@ function Session(canvasId) {
         self.climate = Climate(self);
         // Fill foodKinds array
         for (var i = 0; i < config.food.kindsAmount; i+= 1) {
-            self.foodKinds.push(FoodKind(self));
+            self.foodKinds.push(FoodKind(i, self));
         }
         // Fill tiles array
         for (var y = 0; y < self.height; y+= 1) {
             for (var x = 0; x < self.width; x+= 1) {
-                var foodIndex = randint(0, config.food.kindsAmount);
+                // Food
+                noise.seed(self.seeds.foodKind);
+                var foodIndex = noise.perlin2(x/config.food.foodKindNoise, y/config.food.foodKindNoise);
+                foodIndex = int((foodIndex+0.65) * (config.food.kindsAmount/1.15));
+                if (foodIndex < 0) foodIndex = 0;
+                if (foodIndex >= config.food.kindsAmount) foodIndex = config.food.kindsAmount-1;
+                var foodKind = self.foodKinds[foodIndex];
+                // Fertility
+                noise.seed(self.seeds.fertility);
                 var fert = noise.perlin2(x/config.tile.fertNoise, y/config.tile.fertNoise);
                 fert = mapValue(fert, -1, 1,
                     config.tile.baseFertilityMin, config.tile.baseFertilityMax);
-                self.tiles.push(Tile(self, x, y, fert, self.foodKinds[foodIndex]));
+                // Create object
+                var tile = Tile(self, x, y, fert);
+                var food = Food(self, foodKind);
+                tile.assignFood(food, foodIndex);
+                self.tiles.push(tile);
             }
         }
         noise.seed(random(0, 1));
@@ -139,11 +160,18 @@ function Session(canvasId) {
             document.getElementById("outputTemp").innerHTML = fRound(self.tiles[pt].temp);
             document.getElementById("outputHumd").innerHTML = fRound(self.tiles[pt].humd);
             document.getElementById("outputFert").innerHTML = fRound(self.tiles[pt].fertility);
+            document.getElementById("outputFoodIndex").innerHTML = self.tiles[pt].food.kind.id;
+            document.getElementById("outputFoodPrefTemp").innerHTML =
+                fRound(self.tiles[pt].food.kind.tempPref);
+            document.getElementById("outputFoodStrength").innerHTML =
+                fRound(self.tiles[pt].food.strength);
         }
         else {
             document.getElementById("outputTemp").innerHTML = "";
             document.getElementById("outputHumd").innerHTML = "";
             document.getElementById("outputFert").innerHTML = "";
+            document.getElementById("outputFoodIndex").innerHTML = "";
+            document.getElementById("outputFoodPrefTemp").innerHTML = "";
         }
         // Simulation info
         document.getElementById("outputFps").innerHTML = self.fps;
@@ -204,6 +232,7 @@ function Session(canvasId) {
         document.getElementById("mapModeTemp").onclick = function(){self.toggleMapMode("temp");};
         document.getElementById("mapModeHumd").onclick = function(){self.toggleMapMode("humd");};
         document.getElementById("mapModeFert").onclick = function(){self.toggleMapMode("fert");};
+        document.getElementById("mapModefoodKind").onclick = function(){self.toggleMapMode("foodKind");};
         // Simulation Speed
         document.getElementById("fpsIncrease").onclick = function(){self.changeSpeed(1);};
         document.getElementById("fpsDecrease").onclick = function(){self.changeSpeed(-1);};
