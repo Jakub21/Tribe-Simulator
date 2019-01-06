@@ -6,10 +6,10 @@
         <link rel="stylesheet" id="styleVariant">
     </head>
     <?php
-    # Creates script at refresh, loading
+    # Loads config file contents to textarea element
+    # Element content is then read by loadConfig.js
     $yaml = file_get_contents("config/simulation.yml");
-    $file = 'var config = jsyaml.load(`' . $yaml . '`);';
-    file_put_contents("js/loadConfig.js", $file);
+    echo '<textarea id="config" class="hidden">'.$yaml.'</textarea>';
     ?>
     <script src="js/lib/jquery.js"></script>
     <script src="js/lib/js-yaml.js"></script>
