@@ -2,8 +2,10 @@
 
 # ----------------------------------------------------------------
 sim:
-    fps: 30
+    fps: 30 # Prefferably a multiple of changeSpeedStep
     yearLength: 400
+    maxAllowedFps: 600
+    changeSpeedStep: 10
 
 # ----------------------------------------------------------------
 disp:

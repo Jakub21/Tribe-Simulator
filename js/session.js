@@ -8,6 +8,7 @@ function Session(canvasId) {
         tick: 0,
         year: 0,
         fps: config.sim.fps,
+        paused: false,
         tiles: [],
         foodKinds: [],
         width: randint(config.map.widthMin, config.map.widthMax),
@@ -51,7 +52,10 @@ function Session(canvasId) {
     }
 
     self.startLoop = function() {
-        self.prepareDoc();
+        self.prepareStyleVariants();
+        self.bindButtonActions();
+        document.getElementById("controlZoom").value = mapValue(
+            config.disp.zoomDefault, config.disp.zoomMin, config.disp.zoomMax, 0, 100);
         self.interval = setInterval(self.update, int(1000/self.fps));
     }
 
@@ -68,7 +72,7 @@ function Session(canvasId) {
         document.getElementById("styleVariant").setAttribute("href", path);
     }
 
-    self.prepareDoc = function() { // Prepares HTML
+    self.prepareStyleVariants = function() { // Prepares HTML
         var clientW = document.documentElement.clientWidth;
         var clientH = document.documentElement.clientHeight;
         if (clientW >= config.disp.toggleBarAtWidth) {
@@ -80,63 +84,20 @@ function Session(canvasId) {
             document.getElementById("styleVariant").setAttribute("href", "css/horizontal.css");
         }
         self.showSection("mapModes");
-        document.getElementById("toggleStyle").onclick = self.toggleStyle
-        // Show / Hide UI Bar
-        document.getElementById("hideBar").onclick = function() {
-            document.getElementById("uiBar").style.display = "none";
-            document.getElementById("showBar").style.display = "block";
-            self.barVisible = false;
-        }
-        document.getElementById("showBar").onclick = function() {
-            document.getElementById("uiBar").style.display = "block";
-            document.getElementById("showBar").style.display = "none";
-            self.barVisible = true;
-        }
-        // Section buttons
-        document.getElementById("vievMapModes").onclick = function(){self.showSection("mapModes");};
-        document.getElementById("vievTileInfo").onclick = function(){self.showSection("tileInfo");};
-        document.getElementById("vievSimSettings").onclick = function(){self.showSection("simSettings");};
-        // Map mode buttons
-        document.getElementById("mapModeTemp").onclick = function(){self.toggleMapMode("temp");};
-        document.getElementById("mapModeHumd").onclick = function(){self.toggleMapMode("humd");};
-        document.getElementById("mapModeFert").onclick = function(){self.toggleMapMode("fert");};
-        var zoom = mapValue(config.disp.zoomDefault, config.disp.zoomMin, config.disp.zoomMax, 0, 100);
-        document.getElementById("controlZoom").value = zoom;
-    }
-
-    self.showSection = function(section) {
-        var sectMapModes = document.getElementById("sectionMapmodes");
-        var secTileInfo = document.getElementById("sectionTileInfo");
-        var secSimSettings = document.getElementById("sectionSettings");
-        if (section == "mapModes") {
-            sectMapModes.style.display = "block";
-            secTileInfo.style.display = "none";
-            secSimSettings.style.display = "none";
-        }
-        else if (section == "tileInfo") {
-            sectMapModes.style.display = "none";
-            secTileInfo.style.display = "block";
-            secSimSettings.style.display = "none";
-        }
-        else if (section == "simSettings") {
-            sectMapModes.style.display = "none";
-            secTileInfo.style.display = "none";
-            secSimSettings.style.display = "block";
-        }
-    }
-
-    self.toggleMapMode = function(mapmode) {
-        self.view.mapMode = mapmode;
     }
 
     self.update = function() {
-        self.tick += 1;
-        if (self.tick % config.sim.yearLength == 0) {self.year += 1;}
+        if (!self.paused) {
+            self.tick += 1;
+            if (self.tick % config.sim.yearLength == 0) {self.year += 1;}
+        }
         self.updateCanvasSize();
         self.readControls();
         self.updateControlsLabels();
-        self.climate.update();
-        self.updateTiles();
+        if (!self.paused) {
+            self.climate.update();
+            self.updateTiles();
+        }
         self.updateScreen();
     }
 
@@ -160,6 +121,7 @@ function Session(canvasId) {
     }
 
     self.updateControlsLabels = function() {
+        // Time elapsed
         document.getElementById("outputYear").innerHTML = self.year;
         var seasonIndex=0, seasonName;
         var yearTick = self.tick%config.sim.yearLength;
@@ -168,8 +130,10 @@ function Session(canvasId) {
         var seasonName = config.disp.season[seasonIndex];
         document.getElementById("outputSeason").innerHTML = seasonName;
         var humanizedZoom = int(self.view.zoom * 100);
+        // View info
         document.getElementById("outputZoom").innerHTML = humanizedZoom;
         var pt = self.pointedTile;
+        // Tile info
         document.getElementById("outputIndex").innerHTML = pt;
         if ((pt >= 0) && (pt < self.width*self.height)) {
             document.getElementById("outputTemp").innerHTML = fRound(self.tiles[pt].temp);
@@ -181,6 +145,8 @@ function Session(canvasId) {
             document.getElementById("outputHumd").innerHTML = "";
             document.getElementById("outputFert").innerHTML = "";
         }
+        // Simulation info
+        document.getElementById("outputFps").innerHTML = self.fps;
     }
 
     self.readControls = function() {
@@ -213,7 +179,82 @@ function Session(canvasId) {
     }
 
     /* --------------------------------
-    * Event Handlers
+    * Button actions
+    */
+
+    self.bindButtonActions = function() {
+        // Toggle style (vertical / horizontal)
+        document.getElementById("toggleStyle").onclick = self.toggleStyle
+        // Show / Hide UI Bar
+        document.getElementById("hideBar").onclick = function() {
+            document.getElementById("uiBar").style.display = "none";
+            document.getElementById("showBar").style.display = "block";
+            self.barVisible = false;
+        }
+        document.getElementById("showBar").onclick = function() {
+            document.getElementById("uiBar").style.display = "block";
+            document.getElementById("showBar").style.display = "none";
+            self.barVisible = true;
+        }
+        // Section choice buttons
+        document.getElementById("vievMapModes").onclick = function(){self.showSection("mapModes");};
+        document.getElementById("vievTileInfo").onclick = function(){self.showSection("tileInfo");};
+        document.getElementById("vievSimSettings").onclick = function(){self.showSection("simSettings");};
+        // Map mode choice buttons
+        document.getElementById("mapModeTemp").onclick = function(){self.toggleMapMode("temp");};
+        document.getElementById("mapModeHumd").onclick = function(){self.toggleMapMode("humd");};
+        document.getElementById("mapModeFert").onclick = function(){self.toggleMapMode("fert");};
+        // Simulation Speed
+        document.getElementById("fpsIncrease").onclick = function(){self.changeSpeed(1);};
+        document.getElementById("fpsDecrease").onclick = function(){self.changeSpeed(-1);};
+        document.getElementById("fpsReset").onclick = function(){self.changeSpeed(false);};
+        document.getElementById("fpsPause").onclick = function(){self.togglePause();};
+    }
+
+    self.showSection = function(section) {
+        var sectMapModes = document.getElementById("sectionMapmodes");
+        var secTileInfo = document.getElementById("sectionTileInfo");
+        var secSimSettings = document.getElementById("sectionSettings");
+        if (section == "mapModes") {
+            sectMapModes.style.display = "block";
+            secTileInfo.style.display = "none";
+            secSimSettings.style.display = "none";
+        }
+        else if (section == "tileInfo") {
+            sectMapModes.style.display = "none";
+            secTileInfo.style.display = "block";
+            secSimSettings.style.display = "none";
+        }
+        else if (section == "simSettings") {
+            sectMapModes.style.display = "none";
+            secTileInfo.style.display = "none";
+            secSimSettings.style.display = "block";
+        }
+    }
+
+    self.toggleMapMode = function(mapmode) {
+        self.view.mapMode = mapmode;
+    }
+
+    self.changeSpeed = function(multiplier) {
+        if (multiplier == false) {
+            self.fps = config.sim.fps;
+        }
+        else {
+            var amount = config.sim.changeSpeedStep * multiplier;
+            self.fps += amount;
+            if (self.fps > config.sim.maxAllowedFps) self.fps = config.sim.maxAllowedFps;
+            else if (self.fps < config.sim.changeSpeedStep) self.fps = config.sim.changeSpeedStep;
+        }
+        clearInterval(self.interval);
+        self.interval = setInterval(self.update, int(1000/self.fps));
+    }
+    self.togglePause = function() {
+        self.paused = !self.paused;
+    }
+
+    /* --------------------------------
+    * Canvas Event Handlers
     */
 
     self.handlerMouseMove = function(evt) {

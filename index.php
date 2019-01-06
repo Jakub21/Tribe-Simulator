@@ -67,9 +67,13 @@
 
             <div id="sectionSettings" class="menuSection">
                 <h3>Simulation Settings</h3>
-                <p class="subcat">TODO</p>
-
-        </div>
+                <p class="subcat">Speed (FPS)</p>
+                <span id="outputFps" class="output"></span>
+                <button id="fpsIncrease" class="menu"> + </button>
+                <button id="fpsDecrease" class="menu"> - </button>
+                <button id="fpsReset" class="menu"> Reset </button>
+                <button id="fpsPause" class="menu"> Pause </button>
+            </div>
         <div class="cleaner"></div>
         <script src="js/launch.js"></script>
     </body>
