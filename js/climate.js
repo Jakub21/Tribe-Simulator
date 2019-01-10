@@ -23,6 +23,31 @@ function Climate(session) {
             config.climate.humdSeasonAmp;
         self.updateCloudShifts()
     }
+    self.updateTiles = function() {
+        var cc = config.climate;
+        var tileArray = self.session.tiles;
+        var lngRatio = 0;
+        for (var y = 0; y < self.session.height; y+= 1) {
+            var lngTemp = (y/self.session.height - 0.5) * cc.lngTempFactor;
+            for (var x = 0; x < self.session.width; x+= 1) {
+                var latHumd = (x/self.session.width - 0.5) * cc.latHumdFactor;
+                var tile = tileArray[getIndex(x, y, self.session.width)];
+                // Update tile temperature
+                noise.seed(self.termPatternSeed);
+                var tempNoise = noise.perlin2((x/cc.climNoise) + self.cloudShift.x,
+                    (y/cc.climNoise) + self.cloudShift.y) * cc.tempLocalAmp;
+                tempNoise *= (self.greenhouse + 1) /2; // This gets multiplied gy GH twice
+                tile.temp = (lngTemp + tempNoise + self.seasonTemp + cc.baseTemp) * self.greenhouse;
+                // Update tile humidity
+                noise.seed(self.humdPatternSeed);
+                var humdNoise = noise.perlin2((x/cc.climNoise) + self.cloudShift.x,
+                    (y/cc.climNoise) + self.cloudShift.y) * cc.tempLocalAmp;
+                tile.humd = latHumd + humdNoise + self.seasonHumd + cc.baseHumd;
+                if (tile.humd < 0) tile.humd = 0;
+                if (tile.humd > 100) tile.humd = 100;
+            }
+        }
+    }
     self.updateCloudShifts = function() {
         var cc = config.climate;
         var maxVel = cc.maxCloudVel;
@@ -37,19 +62,6 @@ function Climate(session) {
         self.cloudShift.x += self.cloudVelocity.x;
         self.cloudShift.y += self.cloudVelocity.y;
 
-    }
-    self.getTemp = function(x, y) {
-        var cc = config.climate;
-        var lngRatio = y/self.session.height;
-        var lngTemp = lngRatio * cc.lngTempFactor;
-        return (lngTemp + self.seasonTemp + cc.baseTemp) * self.greenhouse;
-
-    }
-    self.getHumd = function(x, y) {
-        var cc = config.climate;
-        var latRatio = (self.session.width-x)/self.session.width;
-        var latHumd = latRatio * cc.latHumdFactor;
-        return (latHumd + self.seasonHumd + cc.baseHumd) * self.greenhouse;
     }
     return self;
 }

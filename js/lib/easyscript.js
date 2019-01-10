@@ -42,6 +42,25 @@ function abs(number) {
     return Math.abs(number);
 }
 
+// Get neighbouring indices
+function getNeighbourIndices(x, y, width, height) {
+    var indices = [];
+    var xx, yy;
+    // Left
+    xx = x-1; yy = y;
+    if (xx >= 0) indices.push(getIndex(xx, yy, width));
+    // Right
+    xx = x+1; yy = y;
+    if (xx < width) indices.push(getIndex(xx, yy, width));
+    // Top
+    xx = x; yy = y-1;
+    if (yy >= 0) indices.push(getIndex(xx, yy, width));
+    // Bottom
+    xx = x; yy = y+1;
+    if (yy < height) indices.push(getIndex(xx, yy, width));
+    return indices;
+}
+
 // Converts HSL to Hex RGB
 // Copied from StackOverflow
 // https://stackoverflow.com/a/44134328

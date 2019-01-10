@@ -15,7 +15,7 @@
     <script src="js/lib/easyscript.js"></script>
     <script src="js/lib/perlinNoise.js"></script>
     <script src="js/loadConfig.js"></script>
-    <script src="js/foodKind.js"></script>
+    <script src="js/food.js"></script>
     <script src="js/mapTile.js"></script>
     <script src="js/climate.js"></script>
     <script src="js/session.js"></script>
@@ -41,6 +41,7 @@
                 <p class="subcat">Menus</p>
                 <button id="vievMapModes" class="dark menu">Map Modes</button>
                 <button id="vievTileInfo" class="dark menu">Tile Info</button>
+                <button id="vievFoodInfo" class="dark menu">Food Info</button>
                 <button id="vievSimSettings" class="dark menu">Simulation Settings</button>
             </div>
 
@@ -51,7 +52,7 @@
                 <button id="mapModeHumd" class="menu">Humidity</button>
                 <button id="mapModeFert" class="menu">Soil Fertility</button>
                 <p class="subcat">Foods</p>
-                <button id="mapModefoodKind" class="menu">Food Kind</button>
+                <button id="mapModeFoodSpiece" class="menu">Food Spiece</button>
             </div>
 
             <div id="sectionTileInfo" class="menuSection">
@@ -64,12 +65,24 @@
                 <span id="outputHumd" class="output"></span>
                 <p class="subcat">Soil Fertility</p>
                 <span id="outputFert" class="output"></span>
-                <p class="subcat">Food Kind</p>
-                <span id="outputFoodIndex" class="output"></span>
-                <p class="subcat">Pref Temp</p>
-                <span id="outputFoodPrefTemp" class="output"></span>
+            </div>
+
+            <div id="sectionFoodInfo" class="menuSection">
+                <h3>Food Info</h3>
                 <p class="subcat">Strength</p>
                 <span id="outputFoodStrength" class="output"></span>
+                <p class="subcat">Temp - Pref</p>
+                <span id="outputFoodTempPref" class="output"></span>
+                <p class="subcat">Temp - Delta</p>
+                <span id="outputFoodTempDelta" class="output"></span>
+                <p class="subcat">Humidity - Pref</p>
+                <span id="outputFoodHumdPref" class="output"></span>
+                <p class="subcat">Humidity - Delta</p>
+                <span id="outputFoodHumdDelta" class="output"></span>
+                <p class="subcat">is placeholder</p>
+                <span id="outputFoodIsPlaceholder" class="output"></span>
+                <p class="subcat">Food age (ticks)</p>
+                <span id="outputFoodAge" class="output"></span>
             </div>
 
             <div id="sectionSettings" class="menuSection">

@@ -10,19 +10,16 @@ function Session(canvasId) {
         fps: config.sim.fps,
         paused: false,
         tiles: [],
-        foodKinds: [],
+        foodSpieces: [],
         width: randint(config.map.widthMin, config.map.widthMax),
         height: randint(config.map.heightMin, config.map.heightMax),
-        view: {x: config.disp.startViewX, y:config.disp.startViewY, zoom:1, mapMode: "foodKind"},
+        view: {x: config.disp.startViewX, y:config.disp.startViewY, zoom:1, mapMode: "foodSpiece"},
         barVisible: true,
         seeds: {
-            foodKind: random(0, 1),
             fertility: random(0, 1),
-            fkEfficiency: random(0, 1),
-            fkTempPref: random(0, 1),
-            fkTempTol: random(0, 1),
-            fkHumdPref: random(0, 1),
-            fkHumdTol: random(0, 1)
+            efficiency: random(0, 1),
+            tempPref: random(0, 1),
+            humdPref: random(0, 1),
         },
         pointedTile: -1, // TEMP
         clickedTiles: [] // TEMP
@@ -31,39 +28,33 @@ function Session(canvasId) {
     self.construct = function() {
         noise.seed(random(0, 1));
         self.climate = Climate(self);
-        // Fill foodKinds array
-        for (var i = 0; i < config.food.kindsAmount; i+= 1) {
-            self.foodKinds.push(FoodKind(i, self));
-        }
+        var cft = config.food.trait;
         // Fill tiles array
         for (var y = 0; y < self.height; y+= 1) {
             for (var x = 0; x < self.width; x+= 1) {
-                // Food
-                noise.seed(self.seeds.foodKind);
-                var foodIndex = noise.perlin2(x/config.food.foodKindNoise, y/config.food.foodKindNoise);
-                foodIndex = int((foodIndex+0.65) * (config.food.kindsAmount/1.15));
-                if (foodIndex < 0) foodIndex = 0;
-                if (foodIndex >= config.food.kindsAmount) foodIndex = config.food.kindsAmount-1;
-                var foodKind = self.foodKinds[foodIndex];
                 // Fertility
                 noise.seed(self.seeds.fertility);
                 var fert = noise.perlin2(x/config.tile.fertNoise, y/config.tile.fertNoise);
                 fert = mapValue(fert, -1, 1,
                     config.tile.baseFertilityMin, config.tile.baseFertilityMax);
+                // Food
+                var scale = cft.efficiency.noiseScale;
+                noise.seed(self.seeds.efficiency);
+                var efficiency = mapValue(noise.perlin2(x/scale, y/scale), -1, 1,
+                    -cft.efficiency.strengthAmp, cft.efficiency.strengthAmp) + cft.efficiency.base;
+                var scale = cft.tempPref.noiseScale;
+                noise.seed(self.seeds.tempPref);
+                var tempPref = mapValue(noise.perlin2(x/scale, y/scale), -1, 1,
+                    -cft.tempPref.strengthAmp, cft.tempPref.strengthAmp) + cft.tempPref.base;
+                var scale = cft.humdPref.noiseScale;
+                noise.seed(self.seeds.humdPref);
+                var humdPref = mapValue(noise.perlin2(x/scale, y/scale), -1, 1,
+                    -cft.humdPref.strengthAmp, cft.humdPref.strengthAmp) + cft.humdPref.base;
+                var food = Food(self, efficiency, tempPref, humdPref);
                 // Create object
                 var tile = Tile(self, x, y, fert);
-                var food = Food(self, foodKind);
-                tile.assignFood(food, foodIndex);
+                tile.assignFood(food);
                 self.tiles.push(tile);
-            }
-        }
-        noise.seed(random(0, 1));
-        for (var y = 0; y < self.height; y+= 1) {
-            for (var x = 0; x < self.width; x+= 1) {
-                var index = getIndex(x, y, self.width);
-                var humd = noise.perlin2(x/17, y/17);
-                self.tiles[index].baseHumd = mapValue(humd, -1, 1,
-                    config.tile.baseHumdMin, config.tile.baseHumdMax);
             }
         }
         // Setup event handlers
@@ -117,6 +108,7 @@ function Session(canvasId) {
         self.updateControlsLabels();
         if (!self.paused) {
             self.climate.update();
+            self.climate.updateTiles();
             self.updateTiles();
         }
         self.updateScreen();
@@ -154,24 +146,36 @@ function Session(canvasId) {
         // View info
         document.getElementById("outputZoom").innerHTML = humanizedZoom;
         var pt = self.pointedTile;
-        // Tile info
+        // Info
         document.getElementById("outputIndex").innerHTML = pt;
         if ((pt >= 0) && (pt < self.width*self.height)) {
-            document.getElementById("outputTemp").innerHTML = fRound(self.tiles[pt].temp);
-            document.getElementById("outputHumd").innerHTML = fRound(self.tiles[pt].humd);
-            document.getElementById("outputFert").innerHTML = fRound(self.tiles[pt].fertility);
-            document.getElementById("outputFoodIndex").innerHTML = self.tiles[pt].food.kind.id;
-            document.getElementById("outputFoodPrefTemp").innerHTML =
-                fRound(self.tiles[pt].food.kind.tempPref);
-            document.getElementById("outputFoodStrength").innerHTML =
-                fRound(self.tiles[pt].food.strength);
+            var tile = self.tiles[pt]
+            // Tile
+            document.getElementById("outputTemp").innerHTML = fRound(tile.temp);
+            document.getElementById("outputHumd").innerHTML = fRound(tile.humd);
+            document.getElementById("outputFert").innerHTML = fRound(tile.fertility);
+            // Food
+            document.getElementById("outputFoodStrength").innerHTML = fRound(tile.food.strength);
+            document.getElementById("outputFoodTempPref").innerHTML = fRound(tile.food.tempPref);
+            document.getElementById("outputFoodTempDelta").innerHTML = fRound(tile.food.tempPref - tile.temp);
+            document.getElementById("outputFoodHumdPref").innerHTML = fRound(tile.food.humdPref);
+            document.getElementById("outputFoodHumdDelta").innerHTML = fRound(tile.food.humdpPref - tile.humd);
+            document.getElementById("outputFoodIsPlaceholder").innerHTML = tile.food.isPlaceholder;
+            document.getElementById("outputFoodAge").innerHTML = self.tick - tile.food.createTick;
         }
         else {
+            // Tile
             document.getElementById("outputTemp").innerHTML = "";
             document.getElementById("outputHumd").innerHTML = "";
             document.getElementById("outputFert").innerHTML = "";
-            document.getElementById("outputFoodIndex").innerHTML = "";
-            document.getElementById("outputFoodPrefTemp").innerHTML = "";
+            // Food
+            document.getElementById("outputFoodStrength").innerHTML = "";
+            document.getElementById("outputFoodTempPref").innerHTML = "";
+            document.getElementById("outputFoodTempDelta").innerHTML = "";
+            document.getElementById("outputFoodHumdPref").innerHTML = "";
+            document.getElementById("outputFoodHumdDelta").innerHTML = "";
+            document.getElementById("outputFoodIsPlaceholder").innerHTML = "";
+            document.getElementById("outputFoodAge").innerHTML = "";
         }
         // Simulation info
         document.getElementById("outputFps").innerHTML = self.fps;
@@ -206,6 +210,15 @@ function Session(canvasId) {
         }
     }
 
+    self.requestTiles = function(indices) {
+        var tiles = [];
+        for (var i = 0; i < indices.length; i += 1) {
+            var index = indices[i];
+            tiles.push(self.tiles[index]);
+        }
+        return tiles;
+    }
+
     /* --------------------------------
     * Button actions
     */
@@ -227,12 +240,13 @@ function Session(canvasId) {
         // Section choice buttons
         document.getElementById("vievMapModes").onclick = function(){self.showSection("mapModes");};
         document.getElementById("vievTileInfo").onclick = function(){self.showSection("tileInfo");};
+        document.getElementById("vievFoodInfo").onclick = function(){self.showSection("foodInfo");};
         document.getElementById("vievSimSettings").onclick = function(){self.showSection("simSettings");};
         // Map mode choice buttons
         document.getElementById("mapModeTemp").onclick = function(){self.toggleMapMode("temp");};
         document.getElementById("mapModeHumd").onclick = function(){self.toggleMapMode("humd");};
         document.getElementById("mapModeFert").onclick = function(){self.toggleMapMode("fert");};
-        document.getElementById("mapModefoodKind").onclick = function(){self.toggleMapMode("foodKind");};
+        document.getElementById("mapModeFoodSpiece").onclick = function(){self.toggleMapMode("foodSpiece");};
         // Simulation Speed
         document.getElementById("fpsIncrease").onclick = function(){self.changeSpeed(1);};
         document.getElementById("fpsDecrease").onclick = function(){self.changeSpeed(-1);};
@@ -243,20 +257,30 @@ function Session(canvasId) {
     self.showSection = function(section) {
         var sectMapModes = document.getElementById("sectionMapmodes");
         var secTileInfo = document.getElementById("sectionTileInfo");
+        var secFoodInfo = document.getElementById("sectionFoodInfo");
         var secSimSettings = document.getElementById("sectionSettings");
         if (section == "mapModes") {
             sectMapModes.style.display = "block";
             secTileInfo.style.display = "none";
+            secFoodInfo.style.display = "none";
             secSimSettings.style.display = "none";
         }
         else if (section == "tileInfo") {
             sectMapModes.style.display = "none";
             secTileInfo.style.display = "block";
+            secFoodInfo.style.display = "none";
+            secSimSettings.style.display = "none";
+        }
+        else if (section == "foodInfo") {
+            sectMapModes.style.display = "none";
+            secTileInfo.style.display = "none";
+            secFoodInfo.style.display = "block";
             secSimSettings.style.display = "none";
         }
         else if (section == "simSettings") {
             sectMapModes.style.display = "none";
             secTileInfo.style.display = "none";
+            secFoodInfo.style.display = "none";
             secSimSettings.style.display = "block";
         }
     }
