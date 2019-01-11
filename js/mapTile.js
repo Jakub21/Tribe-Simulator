@@ -31,11 +31,21 @@ function Tile(session, x, y, fertility, foodSpiece) {
             hue = mapValue(self.humd,
                 config.disp.repr.humdMax, config.disp.repr.humdMin,
                 config.disp.hueRed, config.disp.hueGreen);}
-        else if (mapMode == "foodSpiece") {
+        else if (mapMode == "foodPrefTemp") {
             if (self.food.isPlaceholder) {hue = 0; sat = 0; lum = 30;}
             else {
-                hue = mapValue(self.food.tempPref, 0, 30,
-                    config.disp.hueGreen, config.disp.hueRed);
+                hue = mapValue(self.food.tempPref,
+                    config.disp.repr.tempMax, config.disp.repr.tempMin,
+                    config.disp.hueRed, config.disp.hueGreen);
+                lum = mapValue(self.food.strength, 0, 100, 0, 50);
+            }
+        }
+        else if (mapMode == "foodPrefHumd") {
+            if (self.food.isPlaceholder) {hue = 0; sat = 0; lum = 30;}
+            else {
+                hue = mapValue(self.food.humdPref,
+                    config.disp.repr.humdMax, config.disp.repr.humdMin,
+                    config.disp.hueRed, config.disp.hueGreen);
                 lum = mapValue(self.food.strength, 0, 100, 0, 50);
             }
         }

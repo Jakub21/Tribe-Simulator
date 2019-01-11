@@ -18,9 +18,11 @@ function Food(session, efficiency, tempPref, humdPref) {
     self.update = function() {
         var tempDelta = abs(self.tempPref - self.tile.temp);
         var humdDelta = abs(self.humdPref - self.tile.humd);
-        var tempFactor = (11 - tempDelta);
-        var humdFactor = 0;
-        var change = (tempFactor + humdFactor) * self.efficiency *
+        var tempFactor = config.food.tempEfficiency - tempDelta;
+        var humdFactor = config.food.humdEfficiency - humdDelta;
+        var tempImportance = config.food.tempImportance;
+        var humdImportance = config.food.humdImportance;
+        var change = (tempFactor*tempImportance + humdFactor*humdImportance) * self.efficiency *
             config.food.baseGrowth;
         if (change > 0) change *= self.tile.fertility;
         else change *= config.food.loseMultiplier;

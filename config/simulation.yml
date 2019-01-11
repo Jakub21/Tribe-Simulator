@@ -46,13 +46,21 @@ map:
 
 # ----------------------------------------------------------------
 food:
-    baseGrowth: 0.4
+    # Strength and Growth
+    baseGrowth: 0.2
     startStrength: 30
     maxStrength: 100
+    loseMultiplier: 1.4 # How much faster food loses strength than gains
+    # Efficiency constants (At what difference growth falls to 0)
+    tempEfficiency: 11
+    humdEfficiency: 30
+    # Growth factors importance
+    tempImportance: 1
+    humdImportance: 0.34
+    # Cloning
     cloneStrength: 70
     cloneMinAge: 0.3 # multiplied by sim.yearLength
     minCloneNeighbours: 1 # Min amount of alive neighbours to create food
-    loseMultiplier: 1.3 # How much faster food loses strength than gains
     trait:
         efficiency:
             base: 1
@@ -61,7 +69,7 @@ food:
             noiseScale: 12
         tempPref:
             base: 13
-            strengthAmp: 14
+            strengthAmp: 17
             mutateAmp: 1.5
             noiseScale: 10
         humdPref:

@@ -13,7 +13,8 @@ function Session(canvasId) {
         foodSpieces: [],
         width: randint(config.map.widthMin, config.map.widthMax),
         height: randint(config.map.heightMin, config.map.heightMax),
-        view: {x: config.disp.startViewX, y:config.disp.startViewY, zoom:1, mapMode: "foodSpiece"},
+        view: {x: config.disp.startViewX, y:config.disp.startViewY,
+            zoom:1, mapMode: "foodPrefTemp"},
         barVisible: true,
         seeds: {
             fertility: random(0, 1),
@@ -246,7 +247,10 @@ function Session(canvasId) {
         document.getElementById("mapModeTemp").onclick = function(){self.toggleMapMode("temp");};
         document.getElementById("mapModeHumd").onclick = function(){self.toggleMapMode("humd");};
         document.getElementById("mapModeFert").onclick = function(){self.toggleMapMode("fert");};
-        document.getElementById("mapModeFoodSpiece").onclick = function(){self.toggleMapMode("foodSpiece");};
+        document.getElementById("mapModeFoodPrefTemp").onclick =
+            function(){self.toggleMapMode("foodPrefTemp");};
+            document.getElementById("mapModeFoodPrefHumd").onclick =
+                function(){self.toggleMapMode("foodPrefHumd");};
         // Simulation Speed
         document.getElementById("fpsIncrease").onclick = function(){self.changeSpeed(1);};
         document.getElementById("fpsDecrease").onclick = function(){self.changeSpeed(-1);};
