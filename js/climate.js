@@ -30,7 +30,7 @@ function Climate(session) {
         for (var y = 0; y < self.session.height; y+= 1) {
             var lngTemp = (y/self.session.height - 0.5) * cc.lngTempFactor;
             for (var x = 0; x < self.session.width; x+= 1) {
-                var latHumd = (x/self.session.width - 0.5) * cc.latHumdFactor;
+                var latHumd = (-x/self.session.width + 0.5) * cc.latHumdFactor;
                 var tile = tileArray[getIndex(x, y, self.session.width)];
                 // Update tile temperature
                 noise.seed(self.termPatternSeed);
