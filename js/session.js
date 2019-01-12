@@ -14,7 +14,7 @@ function Session(canvasId) {
         width: randint(config.map.widthMin, config.map.widthMax),
         height: randint(config.map.heightMin, config.map.heightMax),
         view: {x: config.disp.startViewX, y:config.disp.startViewY,
-            zoom:1, mapMode: "foodPrefTemp"},
+            zoom: config.disp.zoomDefault, mapMode: "foodPrefTemp"},
         barVisible: true,
         seeds: {
             fertility: random(0, 1),
@@ -68,7 +68,7 @@ function Session(canvasId) {
         self.prepareStyleVariants();
         self.bindButtonActions();
         document.getElementById("controlZoom").value = mapValue(
-            config.disp.zoomDefault, config.disp.zoomMin, config.disp.zoomMax, 0, 100);
+            self.view.zoom, config.disp.zoomMin, config.disp.zoomMax, 0, 100);
         self.interval = setInterval(self.update, int(1000/self.fps));
     }
 
