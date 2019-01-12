@@ -160,7 +160,7 @@ function Session(canvasId) {
             document.getElementById("outputFoodTempPref").innerHTML = fRound(tile.food.tempPref);
             document.getElementById("outputFoodTempDelta").innerHTML = fRound(tile.food.tempPref - tile.temp);
             document.getElementById("outputFoodHumdPref").innerHTML = fRound(tile.food.humdPref);
-            document.getElementById("outputFoodHumdDelta").innerHTML = fRound(tile.food.humdpPref - tile.humd);
+            document.getElementById("outputFoodHumdDelta").innerHTML = fRound(tile.food.humdPref - tile.humd);
             document.getElementById("outputFoodIsPlaceholder").innerHTML = tile.food.isPlaceholder;
             document.getElementById("outputFoodAge").innerHTML = self.tick - tile.food.createTick;
         }
