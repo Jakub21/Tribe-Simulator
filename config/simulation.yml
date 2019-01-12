@@ -50,17 +50,19 @@ food:
     baseGrowth: 0.2
     startStrength: 30
     maxStrength: 100
-    loseMultiplier: 1.4 # How much faster food loses strength than gains
+    loseMultiplier: 1.4 # How much times faster food loses
+        # strength than gains
     # Efficiency constants (At what difference growth falls to 0)
-    tempEfficiency: 11
+    tempEfficiency: 10.3
     humdEfficiency: 30
     # Growth factors importance
     tempImportance: 1
-    humdImportance: 0.34
+    humdImportance: 0.4
     # Cloning
     cloneStrength: 70
     cloneMinAge: 0.3 # multiplied by sim.yearLength
-    minCloneNeighbours: 1 # Min amount of alive neighbours to create food
+    minCloneNeighbours: 1 # Min amount of alive neighbours to
+        # create food
     trait:
         efficiency:
             base: 1
@@ -98,12 +100,12 @@ climate:
     baseTemp: 14
     lngTempFactor: 25
     tempSeasonAmp: 13 # x2
-    tempLocalAmp: 6
+    tempLocalAmp: 9
     # Humidity
     baseHumd: 50
-    latHumdFactor: 30
-    humdSeasonAmp: 10 # x2
-    humdLocalAmp: 0
+    latHumdFactor: 45
+    humdSeasonAmp: 25 # x2
+    humdLocalAmp: 25
     # Greenhouse effect
     baseGreenhouse: 1
     # Clouds
