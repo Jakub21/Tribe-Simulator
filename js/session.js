@@ -62,6 +62,7 @@ function Session(canvasId) {
         self.canvas.addEventListener("mousedown", self.handlerMouseClick);
         self.canvas.addEventListener("mouseup", self.handlerMouseUnclick);
         self.canvas.addEventListener("mouseout", self.handlerMouseLeave);
+        self.canvas.addEventListener("wheel", self.handlerMouseWheel);
     }
 
     self.startLoop = function() {
@@ -360,6 +361,12 @@ function Session(canvasId) {
         self.pointedTile = NaN;
         self.view.isDragged = false;
         self.view.mouseIsClicked = false;
+    }
+
+    self.handlerMouseWheel = function(evt) {
+        var current = document.getElementById("controlZoom").value;
+        current = int(current) - evt.deltaY;
+        document.getElementById("controlZoom").value = current;
     }
 
     self.construct();
