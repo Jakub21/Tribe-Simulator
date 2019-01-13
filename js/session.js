@@ -138,8 +138,9 @@ function Session(canvasId) {
         // Time elapsed
         document.getElementById("outputYear").innerHTML = self.year;
         var seasonIndex=0, seasonName;
-        var yearTick = self.tick%config.sim.yearLength;
-        var seasonLength = config.sim.yearLength / 4;
+        var yearLength = config.sim.yearLength;
+        var yearTick = self.tick%yearLength;
+        var seasonLength = yearLength / 4;
         while (yearTick > seasonLength) {seasonIndex += 1; yearTick -= seasonLength;}
         var seasonName = config.disp.season[seasonIndex];
         document.getElementById("outputSeason").innerHTML = seasonName;
@@ -161,8 +162,13 @@ function Session(canvasId) {
             document.getElementById("outputFoodTempDelta").innerHTML = fRound(tile.food.tempPref - tile.temp);
             document.getElementById("outputFoodHumdPref").innerHTML = fRound(tile.food.humdPref);
             document.getElementById("outputFoodHumdDelta").innerHTML = fRound(tile.food.humdPref - tile.humd);
-            document.getElementById("outputFoodIsPlaceholder").innerHTML = tile.food.isPlaceholder;
-            document.getElementById("outputFoodAge").innerHTML = self.tick - tile.food.createTick;
+            document.getElementById("outputFoodIsPlaceholder").innerHTML = !tile.food.isPlaceholder;
+            var foodAge = self.tick - tile.food.createTick
+            if (!tile.food.isPlaceholder) {
+                document.getElementById("outputFoodAge").innerHTML = int(foodAge/yearLength) +
+                ' yrs ' + foodAge%yearLength + ' d';}
+            else {
+                document.getElementById("outputFoodAge").innerHTML = NaN;}
         }
         else {
             // Tile
@@ -226,7 +232,7 @@ function Session(canvasId) {
 
     self.bindButtonActions = function() {
         // Toggle style (vertical / horizontal)
-        document.getElementById("toggleStyle").onclick = self.toggleStyle
+        document.getElementById("toggleStyle").onclick = self.toggleStyle;
         // Show / Hide UI Bar
         document.getElementById("hideBar").onclick = function() {
             document.getElementById("uiBar").style.display = "none";

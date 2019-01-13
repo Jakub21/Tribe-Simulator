@@ -80,9 +80,9 @@
                 <span id="outputFoodHumdPref" class="output"></span>
                 <p class="subcat">Humidity - Delta</p>
                 <span id="outputFoodHumdDelta" class="output"></span>
-                <p class="subcat">is placeholder</p>
+                <p class="subcat">Is Alive</p>
                 <span id="outputFoodIsPlaceholder" class="output"></span>
-                <p class="subcat">Food age (ticks)</p>
+                <p class="subcat">Food Age</p>
                 <span id="outputFoodAge" class="output"></span>
             </div>
 
