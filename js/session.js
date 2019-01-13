@@ -22,8 +22,7 @@ function Session(canvasId) {
             tempPref: random(0, 1),
             humdPref: random(0, 1),
         },
-        pointedTile: -1, // TEMP
-        clickedTiles: [] // TEMP
+        pointedTile: NaN,
     };
 
     self.construct = function() {
@@ -62,6 +61,7 @@ function Session(canvasId) {
         self.canvas.addEventListener('mousemove', self.handlerMouseMove);
         self.canvas.addEventListener("mousedown", self.handlerMouseClick);
         self.canvas.addEventListener("mouseup", self.handlerMouseUnclick);
+        self.canvas.addEventListener("mouseout", self.handlerMouseLeave);
     }
 
     self.startLoop = function() {
@@ -353,10 +353,13 @@ function Session(canvasId) {
             var pointedTile = {x: int((mousePos.x+self.view.x)/(tw+1)),
                 y: int((mousePos.y+self.view.y)/(tw+1))};
             var tileIndex = getIndex(pointedTile.x, pointedTile.y, self.width);
-            var index = self.clickedTiles.indexOf(tileIndex);
-            if (index > -1) { self.clickedTiles.splice(index, 1);}
-            else {self.clickedTiles.push(tileIndex);}
         }
+    }
+
+    self.handlerMouseLeave = function(evt) {
+        self.pointedTile = NaN;
+        self.view.isDragged = false;
+        self.view.mouseIsClicked = false;
     }
 
     self.construct();
