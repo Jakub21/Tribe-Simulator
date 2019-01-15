@@ -9,7 +9,7 @@ function Food(session, efficiency, tempPref, humdPref) {
         efficiency: efficiency,
         tempPref: tempPref,
         humdPref: humdPref,
-        strength: config.food.startStrength,
+        strength: config.food.strength.start,
         isPlaceholder: false,
     };
     self.assignTile = function(tile) {
@@ -23,11 +23,11 @@ function Food(session, efficiency, tempPref, humdPref) {
         var tempImportance = config.food.tempImportance;
         var humdImportance = config.food.humdImportance;
         var change = (tempFactor*tempImportance + humdFactor*humdImportance) * self.efficiency *
-            config.food.baseGrowth;
+            config.food.growth.base;
         if (change > 0) change *= self.tile.fertility;
-        else change *= config.food.loseMultiplier;
+        else change *= config.food.growth.loseMultiplier;
         self.strength += change;
-        if (self.strength > config.food.maxStrength) self.strength = config.food.maxStrength;
+        if (self.strength > config.food.strength.max) self.strength = config.food.strength.max;
         if (self.strength <= 0) self.kill();
     }
     self.mutate = function() {

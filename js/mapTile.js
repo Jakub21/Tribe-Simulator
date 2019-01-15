@@ -72,11 +72,11 @@ function Tile(session, x, y, fertility, foodSpiece) {
         for (var i = 0; i < otherTiles.length; i += 1) {
             var food = otherTiles[i].food;
             if (session.tick - food.createTick < config.food.cloneMinAge) continue;
-            if ((!food.isPlaceholder) && (food.strength >= config.food.cloneStrength)) {
+            if ((!food.isPlaceholder) && (food.strength >= config.food.clone.minStrength)) {
                 otherFoods.push(otherTiles[i].food);
             }
         }
-        //if (otherFoods.length < config.food.minCloneNeighbours) return;
+        //if (otherFoods.length < config.food.clone.minNeighbours) return;
         var food = averagedFood(otherFoods);
         if (food == false) return;
         food.mutate();
@@ -89,10 +89,10 @@ function Tile(session, x, y, fertility, foodSpiece) {
     }
     self.update = function() {
         if (!self.hasFood) {
-            var mustWait = config.tile.foodDiedCooldown * config.sim.yearLength;
+            var mustWait = config.tile.ownedFood.diedCooldown * config.sim.yearLength;
             var elapsed = self.session.tick - self.lostFoodTick;
             if (elapsed >= mustWait) {
-                //if (random() <= config.tile.foodNewChance)
+                if (random() <= config.tile.ownedFood.newChance)
                 self.getNewFood();
             }
         }

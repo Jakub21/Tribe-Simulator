@@ -29,27 +29,28 @@ function Session(canvasId) {
         noise.seed(random(0, 1));
         self.climate = Climate(self);
         var cft = config.food.trait;
+        var baseFert = config.tile.fertility.base;
         // Fill tiles array
         for (var y = 0; y < self.height; y+= 1) {
             for (var x = 0; x < self.width; x+= 1) {
                 // Fertility
                 noise.seed(self.seeds.fertility);
-                var fert = noise.perlin2(x/config.tile.fertNoise, y/config.tile.fertNoise);
+                var fert = noise.perlin2(x/config.tile.fertility.noiseScale, y/config.tile.fertility.noiseScale);
                 fert = mapValue(fert, -1, 1,
-                    config.tile.baseFertilityMin, config.tile.baseFertilityMax);
+                    baseFert-config.tile.fertility.baseAmp, baseFert+config.tile.fertility.baseAmp);
                 // Food
                 var scale = cft.efficiency.noiseScale;
                 noise.seed(self.seeds.efficiency);
                 var efficiency = mapValue(noise.perlin2(x/scale, y/scale), -1, 1,
-                    -cft.efficiency.strengthAmp, cft.efficiency.strengthAmp) + cft.efficiency.base;
+                    -cft.efficiency.baseAmp, cft.efficiency.baseAmp) + cft.efficiency.base;
                 var scale = cft.tempPref.noiseScale;
                 noise.seed(self.seeds.tempPref);
                 var tempPref = mapValue(noise.perlin2(x/scale, y/scale), -1, 1,
-                    -cft.tempPref.strengthAmp, cft.tempPref.strengthAmp) + cft.tempPref.base;
+                    -cft.tempPref.baseAmp, cft.tempPref.baseAmp) + cft.tempPref.base;
                 var scale = cft.humdPref.noiseScale;
                 noise.seed(self.seeds.humdPref);
                 var humdPref = mapValue(noise.perlin2(x/scale, y/scale), -1, 1,
-                    -cft.humdPref.strengthAmp, cft.humdPref.strengthAmp) + cft.humdPref.base;
+                    -cft.humdPref.baseAmp, cft.humdPref.baseAmp) + cft.humdPref.base;
                 var food = Food(self, efficiency, tempPref, humdPref);
                 // Create object
                 var tile = Tile(self, x, y, fert);
@@ -206,7 +207,7 @@ function Session(canvasId) {
 
     self.showTiles = function() {
         var v = self.view;
-        var tw = int(config.disp.zoom.baseTileSize * v.zoom);
+        var tw = int(config.disp.elems.tile * v.zoom);
         var context = self.canvas.getContext("2d");
         for (var x = 0; x < self.width; x++) {
             for (var y = 0; y < self.height; y++) {
@@ -322,7 +323,7 @@ function Session(canvasId) {
     */
 
     self.handlerMouseMove = function(evt) {
-        var tw = int(config.disp.baseTileSize * self.view.zoom);
+        var tw = int(config.disp.elems.tile * self.view.zoom);
         var rect = self.canvas.getBoundingClientRect();
         var mousePos = {x: evt.clientX - rect.left, y: evt.clientY - rect.top};
         var pointedTile = {x: int((mousePos.x+self.view.x)/(tw+1)),
@@ -338,7 +339,7 @@ function Session(canvasId) {
     }
 
     self.handlerMouseClick = function(evt) {
-        var tw = int(config.disp.baseTileSize * self.view.zoom);
+        var tw = int(config.disp.elems.tile * self.view.zoom);
         var rect = self.canvas.getBoundingClientRect();
         self.mousePos = {x: evt.clientX - rect.left, y: evt.clientY - rect.top};
         self.view.mouseIsClicked = true;
@@ -346,7 +347,7 @@ function Session(canvasId) {
     }
 
     self.handlerMouseUnclick = function(evt) {
-        var tw = int(config.disp.baseTileSize * self.view.zoom);
+        var tw = int(config.disp.elems.tile * self.view.zoom);
         var rect = self.canvas.getBoundingClientRect();
         var mousePos = {x: evt.clientX - rect.left, y: evt.clientY - rect.top};
         self.view.mouseIsClicked = false;
