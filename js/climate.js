@@ -49,10 +49,10 @@ function Climate(session) {
         }
     }
     self.updateCloudShifts = function() {
-        var cc = config.climate;
-        var maxVel = cc.maxCloudVel;
-        var xStep = random(-cc.cloud.vel.step*cc.cloud.vel.backwdFactor, cc.cloud.vel.step);
-        var yStep = random(-cc.cloud.vel.step*cc.cloud.vel.backwdFactor, cc.cloud.vel.step);
+        var cloudConfig = config.climate.cloud;
+        var maxVel = cloudConfig.vel.max;
+        var xStep = random(-cloudConfig.vel.step*cloudConfig.vel.backwdFactor, cloudConfig.vel.step);
+        var yStep = random(-cloudConfig.vel.step*cloudConfig.vel.backwdFactor, cloudConfig.vel.step);
         self.cloudVelocity.x += xStep;
         self.cloudVelocity.y += yStep;
         if (self.cloudVelocity.x > maxVel) self.cloudVelocity.x = maxVel;
