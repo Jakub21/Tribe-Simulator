@@ -7,14 +7,14 @@ function Session(canvasId) {
         canvas: document.getElementById(canvasId),
         tick: 0,
         year: 0,
-        fps: config.sim.fps,
+        fps: config.sim.fps.default,
         paused: false,
         tiles: [],
         foodSpieces: [],
         width: randint(config.map.widthMin, config.map.widthMax),
         height: randint(config.map.heightMin, config.map.heightMax),
-        view: {x: config.disp.startViewX, y:config.disp.startViewY,
-            zoom: config.disp.zoomDefault, mapMode: "foodPrefTemp"},
+        view: {x: 0, y:0, zoom: config.disp.zoom.default,
+            mapMode: "foodPrefTemp"},
         barVisible: true,
         seeds: {
             fertility: random(0, 1),
@@ -69,7 +69,7 @@ function Session(canvasId) {
         self.prepareStyleVariants();
         self.bindButtonActions();
         document.getElementById("controlZoom").value = mapValue(
-            self.view.zoom, config.disp.zoomMin, config.disp.zoomMax, 0, 100);
+            self.view.zoom, config.disp.zoom.min, config.disp.zoom.max, 0, 100);
         self.interval = setInterval(self.update, int(1000/self.fps));
     }
 
@@ -89,7 +89,7 @@ function Session(canvasId) {
     self.prepareStyleVariants = function() { // Prepares HTML
         var clientW = document.documentElement.clientWidth;
         var clientH = document.documentElement.clientHeight;
-        if (clientW >= config.disp.toggleBarAtWidth) {
+        if (clientW >= config.disp.ui.toggleBarAtWidth) {
             self.styleVariant = "v";
             document.getElementById("styleVariant").setAttribute("href", "css/vertical.css");
         }
@@ -120,7 +120,7 @@ function Session(canvasId) {
         var width, height;
         var clientW = document.documentElement.clientWidth;
         var clientH = document.documentElement.clientHeight;
-        var st = config.disp.style;
+        var st = config.disp.canvas;
         if (self.styleVariant == "v") {
             if (self.barVisible) {width = clientW * (st.percW/100) - st.borderX;}
             else {width = clientW - st.borderX - st.hiddenBarSize;}
@@ -191,7 +191,7 @@ function Session(canvasId) {
 
     self.readControls = function() {
         var zoom = document.getElementById("controlZoom").value;
-        self.view.zoom = mapValue(zoom, 0, 99, config.disp.zoomMin, config.disp.zoomMax);
+        self.view.zoom = mapValue(zoom, 0, 99, config.disp.zoom.min, config.disp.zoom.max);
     }
 
     self.updateTiles = function() {
@@ -206,7 +206,7 @@ function Session(canvasId) {
 
     self.showTiles = function() {
         var v = self.view;
-        var tw = int(config.disp.baseTileSize * v.zoom);
+        var tw = int(config.disp.zoom.baseTileSize * v.zoom);
         var context = self.canvas.getContext("2d");
         for (var x = 0; x < self.width; x++) {
             for (var y = 0; y < self.height; y++) {
@@ -302,13 +302,13 @@ function Session(canvasId) {
 
     self.changeSpeed = function(multiplier) {
         if (multiplier == false) {
-            self.fps = config.sim.fps;
+            self.fps = config.sim.fps.default;
         }
         else {
-            var amount = config.sim.changeSpeedStep * multiplier;
+            var amount = config.sim.fps.step * multiplier;
             self.fps += amount;
-            if (self.fps > config.sim.maxAllowedFps) self.fps = config.sim.maxAllowedFps;
-            else if (self.fps < config.sim.changeSpeedStep) self.fps = config.sim.changeSpeedStep;
+            if (self.fps > config.sim.fps.max) self.fps = config.sim.fps.max;
+            else if (self.fps < config.sim.fps.step) self.fps = config.sim.fps.step;
         }
         clearInterval(self.interval);
         self.interval = setInterval(self.update, int(1000/self.fps));

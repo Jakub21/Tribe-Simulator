@@ -17,36 +17,40 @@ function Tile(session, x, y, fertility, foodSpiece) {
     };
     self.getColor = function(mapMode) {
         var hue = NaN;
-        var sat = config.disp.repr.tileSat;
-        var lum = config.disp.repr.tileLum;
+        var sat = config.disp.color.sat;
+        var lum = config.disp.color.lum.default;
         if (mapMode == "fert") {
             hue = mapValue(self.fertility,
-                config.disp.repr.fertMin, config.disp.repr.fertMax,
-                config.disp.hueRed,config.disp.hueGreen);}
+                config.disp.range.fert.min, config.disp.range.fert.max,
+                config.disp.color.hue.min,config.disp.color.hue.max);}
         else if (mapMode == "temp") {
             hue = mapValue(self.temp,
-                config.disp.repr.tempMax, config.disp.repr.tempMin,
-                config.disp.hueRed, config.disp.hueGreen);}
+                config.disp.range.temp.max, config.disp.range.temp.min,
+                config.disp.color.hue.min, config.disp.color.hue.max);}
         else if (mapMode == "humd") {
             hue = mapValue(self.humd,
-                config.disp.repr.humdMax, config.disp.repr.humdMin,
-                config.disp.hueRed, config.disp.hueGreen);}
+                config.disp.range.humd.max, config.disp.range.humd.min,
+                config.disp.color.hue.min, config.disp.color.hue.max);}
         else if (mapMode == "foodPrefTemp") {
             if (self.food.isPlaceholder) {hue = 0; sat = 0; lum = 30;}
             else {
                 hue = mapValue(self.food.tempPref,
-                    config.disp.repr.tempMax, config.disp.repr.tempMin,
-                    config.disp.hueRed, config.disp.hueGreen);
-                lum = mapValue(self.food.strength, 0, 100, 0, 50);
+                    config.disp.range.temp.max, config.disp.range.temp.min,
+                    config.disp.color.hue.min, config.disp.color.hue.max);
+                lum = mapValue(self.food.strength,
+                    config.disp.range.strength.min, config.disp.range.strength.max,
+                    config.disp.color.lum.min, config.disp.color.lum.max);
             }
         }
         else if (mapMode == "foodPrefHumd") {
             if (self.food.isPlaceholder) {hue = 0; sat = 0; lum = 30;}
             else {
                 hue = mapValue(self.food.humdPref,
-                    config.disp.repr.humdMax, config.disp.repr.humdMin,
-                    config.disp.hueRed, config.disp.hueGreen);
-                lum = mapValue(self.food.strength, 0, 100, 0, 50);
+                    config.disp.range.humd.max, config.disp.range.humd.min,
+                    config.disp.color.hue.min, config.disp.color.hue.max);
+                lum = mapValue(self.food.strength,
+                    config.disp.range.strength.min, config.disp.range.strength.max,
+                    config.disp.color.lum.min, config.disp.color.lum.max);
             }
         }
         else {return "#444";}
