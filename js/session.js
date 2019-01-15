@@ -29,25 +29,27 @@ function Session(canvasId) {
         noise.seed(random(0, 1));
         self.climate = Climate(self);
         var cft = config.food.trait;
-        var baseFert = config.tile.fertility.base;
+        var scale;
         // Fill tiles array
         for (var y = 0; y < self.height; y+= 1) {
             for (var x = 0; x < self.width; x+= 1) {
                 // Fertility
+                scale = config.tile.fertility.noiseScale;
                 noise.seed(self.seeds.fertility);
-                var fert = noise.perlin2(x/config.tile.fertility.noiseScale, y/config.tile.fertility.noiseScale);
-                fert = mapValue(fert, -1, 1,
-                    baseFert-config.tile.fertility.baseAmp, baseFert+config.tile.fertility.baseAmp);
-                // Food
-                var scale = cft.efficiency.noiseScale;
+                var fert = mapValue(noise.perlin2(x/scale, y/scale), -1, 1,
+                    -config.tile.fertility.baseAmp, config.tile.fertility.baseAmp) + config.tile.fertility.base;
+                // Food Efficiency
+                scale = cft.efficiency.noiseScale;
                 noise.seed(self.seeds.efficiency);
                 var efficiency = mapValue(noise.perlin2(x/scale, y/scale), -1, 1,
                     -cft.efficiency.baseAmp, cft.efficiency.baseAmp) + cft.efficiency.base;
-                var scale = cft.tempPref.noiseScale;
+                // Food Pref Temp
+                scale = cft.tempPref.noiseScale;
                 noise.seed(self.seeds.tempPref);
                 var tempPref = mapValue(noise.perlin2(x/scale, y/scale), -1, 1,
                     -cft.tempPref.baseAmp, cft.tempPref.baseAmp) + cft.tempPref.base;
-                var scale = cft.humdPref.noiseScale;
+                // Food Pref Humd
+                scale = cft.humdPref.noiseScale;
                 noise.seed(self.seeds.humdPref);
                 var humdPref = mapValue(noise.perlin2(x/scale, y/scale), -1, 1,
                     -cft.humdPref.baseAmp, cft.humdPref.baseAmp) + cft.humdPref.base;
