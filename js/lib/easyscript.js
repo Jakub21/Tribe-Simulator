@@ -4,7 +4,7 @@
 */
 
 // Random float greater than $from and less than $to
-function random(from, to) {
+function random(from=0, to=1) {
     var spread = to-from;
     return Math.random()*spread + from;
 }
