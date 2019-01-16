@@ -52,6 +52,7 @@
                 <button id="mapModeHumd" class="menu">Humidity</button>
                 <button id="mapModeFert" class="menu">Soil Fertility</button>
                 <p class="subcat">Foods</p>
+                <button id="mapModeFoodFruitType" class="menu">Fruit Type</button>
                 <button id="mapModeFoodPrefTemp" class="menu">Pref. Temperature</button>
                 <button id="mapModeFoodPrefHumd" class="menu">Pref. Humidity</button>
             </div>

@@ -34,7 +34,7 @@ function Tile(session, x, y, fertility, foodSpiece) {
         else if (mapMode == "foodPrefTemp") {
             if (self.food.isPlaceholder) {hue = 0; sat = 0; lum = 30;}
             else {
-                hue = mapValue(self.food.tempPref,
+                hue = mapValue(self.food.trait.tempPref,
                     config.disp.range.temp.max, config.disp.range.temp.min,
                     config.disp.color.hue.min, config.disp.color.hue.max);
                 lum = mapValue(self.food.strength,
@@ -45,8 +45,19 @@ function Tile(session, x, y, fertility, foodSpiece) {
         else if (mapMode == "foodPrefHumd") {
             if (self.food.isPlaceholder) {hue = 0; sat = 0; lum = 30;}
             else {
-                hue = mapValue(self.food.humdPref,
+                hue = mapValue(self.food.trait.humdPref,
                     config.disp.range.humd.max, config.disp.range.humd.min,
+                    config.disp.color.hue.min, config.disp.color.hue.max);
+                lum = mapValue(self.food.strength,
+                    config.disp.range.strength.min, config.disp.range.strength.max,
+                    config.disp.color.lum.min, config.disp.color.lum.max);
+            }
+        }
+        else if (mapMode == "foodFruitType") {
+            if (self.food.isPlaceholder) {hue = 0; sat = 0; lum = 30;}
+            else {
+                hue = mapValue(self.food.trait.fruitType,
+                    config.disp.range.fruit.max, config.disp.range.fruit.min,
                     config.disp.color.hue.min, config.disp.color.hue.max);
                 lum = mapValue(self.food.strength,
                     config.disp.range.strength.min, config.disp.range.strength.max,

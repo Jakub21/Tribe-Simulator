@@ -42,6 +42,13 @@ function abs(number) {
     return Math.abs(number);
 }
 
+// Get index of instance in array
+function indexOf(arr, obj) {
+    for(var i=0; i<arr.length; i++) {
+        if (arr[i] == obj) return i;
+    }
+}
+
 // Get neighbouring indices
 function getNeighbourIndices(x, y, width, height) {
     var indices = [];

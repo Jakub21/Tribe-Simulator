@@ -21,6 +21,7 @@ function Session(canvasId) {
             efficiency: random(0, 1),
             tempPref: random(0, 1),
             humdPref: random(0, 1),
+            fruitType: random(0, 1),
         },
         pointedTile: NaN,
     };
@@ -53,8 +54,13 @@ function Session(canvasId) {
                 noise.seed(self.seeds.humdPref);
                 var humdPref = mapValue(noise.perlin2(x/scale, y/scale), -1, 1,
                     -cft.humdPref.baseAmp, cft.humdPref.baseAmp) + cft.humdPref.base;
-                var food = Food(self, efficiency, tempPref, humdPref);
-                // Create object
+                // Food Fruit Type
+                scale = cft.fruitType.noiseScale;
+                noise.seed(self.seeds.fruitType);
+                var fruitType = mapValue(noise.perlin2(x/scale, y/scale), -1, 1,
+                    -cft.fruitType.baseAmp, cft.fruitType.baseAmp) + cft.fruitType.base;
+                // Create objects
+                var food = Food(self, efficiency, tempPref, humdPref, fruitType);
                 var tile = Tile(self, x, y, fert);
                 tile.assignFood(food);
                 self.tiles.push(tile);
@@ -74,6 +80,15 @@ function Session(canvasId) {
         document.getElementById("controlZoom").value = mapValue(
             self.view.zoom, config.disp.zoom.min, config.disp.zoom.max, 0, 100);
         self.interval = setInterval(self.update, int(1000/self.fps));
+    }
+
+    self.loopOnce = function() {
+        // Used for debug
+        self.prepareStyleVariants();
+        self.bindButtonActions();
+        document.getElementById("controlZoom").value = mapValue(
+            self.view.zoom, config.disp.zoom.min, config.disp.zoom.max, 0, 100);
+        self.update();
     }
 
     self.toggleStyle = function() {
@@ -162,10 +177,10 @@ function Session(canvasId) {
             document.getElementById("outputFert").innerHTML = fRound(tile.fertility);
             // Food
             document.getElementById("outputFoodStrength").innerHTML = fRound(tile.food.strength);
-            document.getElementById("outputFoodTempPref").innerHTML = fRound(tile.food.tempPref);
-            document.getElementById("outputFoodTempDelta").innerHTML = fRound(tile.food.tempPref - tile.temp);
-            document.getElementById("outputFoodHumdPref").innerHTML = fRound(tile.food.humdPref);
-            document.getElementById("outputFoodHumdDelta").innerHTML = fRound(tile.food.humdPref - tile.humd);
+            document.getElementById("outputFoodTempPref").innerHTML = fRound(tile.food.trait.tempPref);
+            document.getElementById("outputFoodTempDelta").innerHTML = fRound(tile.food.trait.tempPref - tile.temp);
+            document.getElementById("outputFoodHumdPref").innerHTML = fRound(tile.food.trait.humdPref);
+            document.getElementById("outputFoodHumdDelta").innerHTML = fRound(tile.food.trait.humdPref - tile.humd);
             document.getElementById("outputFoodIsPlaceholder").innerHTML = !tile.food.isPlaceholder;
             var foodAge = self.tick - tile.food.createTick
             if (!tile.food.isPlaceholder) {
@@ -257,6 +272,8 @@ function Session(canvasId) {
         document.getElementById("mapModeTemp").onclick = function(){self.toggleMapMode("temp");};
         document.getElementById("mapModeHumd").onclick = function(){self.toggleMapMode("humd");};
         document.getElementById("mapModeFert").onclick = function(){self.toggleMapMode("fert");};
+        document.getElementById("mapModeFoodFruitType").onclick =
+            function(){self.toggleMapMode("foodFruitType");};
         document.getElementById("mapModeFoodPrefTemp").onclick =
             function(){self.toggleMapMode("foodPrefTemp");};
             document.getElementById("mapModeFoodPrefHumd").onclick =
