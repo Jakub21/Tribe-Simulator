@@ -19,16 +19,30 @@ function Food(session, efficiency, tempPref, humdPref, fruitType) {
         self.tile = tile;
     }
     self.update = function() {
+        // Some variable that can not be named yet (H of target range of mapValue)
+        // Calculate temperature
+        var tempRange = config.food.growth.temp.range;
         var tempDelta = abs(self.trait.tempPref - self.tile.temp);
+        var tempScale = config.food.growth.temp.scale;
+        var tempEff = config.food.growth.temp.efficiency**2;
+        var tempFactor = tempEff - tempDelta**2;
+        tempFactor = mapValue(tempFactor, tempEff, -tempEff, tempRange.max, tempRange.min);
+        if (tempFactor < -1) tempFactor = -1;
+        // Calculate humidity
+        var humdRange = config.food.growth.temp.range;
         var humdDelta = abs(self.trait.humdPref - self.tile.humd);
-        var tempFactor = config.food.tempEfficiency - tempDelta;
-        var humdFactor = config.food.humdEfficiency - humdDelta;
-        var tempImportance = config.food.tempImportance;
-        var humdImportance = config.food.humdImportance;
-        var change = (tempFactor*tempImportance + humdFactor*humdImportance) * self.trait.efficiency *
-            config.food.growth.base;
-        if (change > 0) change *= self.tile.fertility;
-        else change *= config.food.growth.loseMultiplier;
+        var humdScale = config.food.growth.humd.scale;
+        var humdEff = config.food.growth.humd.efficiency;
+        var humdFactor = humdEff - humdDelta;
+        humdFactor = mapValue(humdFactor, humdEff, -humdEff, humdRange.max, humdRange.min);
+        if (humdFactor < -1) humdFactor = -1;
+        // Apply change
+        var change = tempFactor * tempScale + humdFactor * humdScale;
+        if (change > 0) {
+            change *= self.tile.fertility * self.trait.efficiency;}
+        else {
+            change *= config.food.growth.loseMultiplier; }
+        change *= config.food.growth.base;
         self.strength += change;
         if (self.strength > config.food.strength.max) self.strength = config.food.strength.max;
         if (self.strength <= 0) self.die();

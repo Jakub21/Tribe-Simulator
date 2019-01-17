@@ -4,7 +4,7 @@
 sim:
     fps:
         max: 240
-        default: 30
+        default: 240
         step: 10
     yearLength: 365
 
@@ -13,18 +13,21 @@ disp:
     zoom:
         max: 1.2
         min: 0.15
-        default: 1
+        default: 0.27
     elems: # Size of elements in x1 zoom
         tile: 55
     range:
         fert:
-            max: 1.5
-            min: 0.6
+            max: 1.2
+            min: 0.8
         temp:
             max: 30
             min: -10
         humd:
             max: 100
+            min: 0
+        fruit:
+            max: 20
             min: 0
         strength:
             max: 100
@@ -52,10 +55,10 @@ disp:
 
 # ----------------------------------------------------------------
 map:
-    widthMin: 50
-    widthMax: 50
-    heightMin: 50
-    heightMax: 50
+    widthMin: 54
+    widthMax: 54
+    heightMin: 76
+    heightMax: 76
 
 # ----------------------------------------------------------------
 food:
@@ -63,13 +66,20 @@ food:
         max: 100
         start: 30
     growth:
-        base: 0.02
-        loseMultiplier: 10
-    # Efficiency constants and importance factors
-    tempEfficiency: 10
-    tempImportance: 1
-    humdEfficiency: 30
-    humdImportance: 0.4
+        temp:
+            scale: 0.5
+            efficiency: 10
+            range:
+                max: 1.35
+                min: -0.95
+        humd:
+            scale: 0.3
+            efficiency: 15
+            range:
+                max: 1.2
+                min: -1
+        base: 1.4
+        loseMultiplier: 1.5
     # Cloning
     clone:
         minStrength: 70
@@ -87,8 +97,8 @@ food:
             mutateAmp: 1.5
             noiseScale: 10
         humdPref:
-            base: 45
-            baseAmp: 35
+            base: 50
+            baseAmp: 45
             mutateAmp: 2
             noiseScale: 10
         fruitType:
@@ -104,7 +114,7 @@ tile:
         baseAmp: 0.3
         noiseScale: 22
     ownedFood:
-        diedCooldown: 0.67 #[years]
+        diedCooldown: 0.334 #[years]
         newChance: 0.9 #[%]
 
 # ----------------------------------------------------------------
@@ -134,3 +144,8 @@ climate:
             chance: 0.005
             delayMin: 5
             delayMax: 80
+
+# ----------------------------------------------------------------
+tribe:
+    pops: # Population
+        start: 100
