@@ -18,6 +18,7 @@
     <script src="js/food.js"></script>
     <script src="js/mapTile.js"></script>
     <script src="js/climate.js"></script>
+    <script src="js/tribe.js"></script>
     <script src="js/session.js"></script>
     <body>
         <canvas id="mainCanvas"></canvas>
@@ -38,11 +39,12 @@
             </div>
             <div class="cleaner"></div>
             <div id="sectionButtons">
-                <p class="subcat">Menus</p>
-                <button id="vievMapModes" class="dark menu">Map Modes</button>
-                <button id="vievTileInfo" class="dark menu">Tile Info</button>
-                <button id="vievFoodInfo" class="dark menu">Food Info</button>
-                <button id="vievSimSettings" class="dark menu">Simulation Settings</button>
+                <p class="subcat">Sections</p>
+                <button id="viewMapModes" class="dark menu">Map Modes</button>
+                <button id="viewTileInfo" class="dark menu">Tile Info</button>
+                <button id="viewFoodInfo" class="dark menu">Food Info</button>
+                <button id="viewTribeInfo" class="dark menu">Tribe Info</button>
+                <button id="viewSimSettings" class="dark menu">Simulation Settings</button>
             </div>
 
             <div id="sectionMapmodes" class="menuSection">
@@ -51,10 +53,12 @@
                 <button id="mapModeTemp" class="menu">Temperature</button>
                 <button id="mapModeHumd" class="menu">Humidity</button>
                 <button id="mapModeFert" class="menu">Soil Fertility</button>
-                <p class="subcat">Foods</p>
+                <p class="subcat">Food</p>
                 <button id="mapModeFoodFruitType" class="menu">Fruit Type</button>
                 <button id="mapModeFoodPrefTemp" class="menu">Pref. Temperature</button>
                 <button id="mapModeFoodPrefHumd" class="menu">Pref. Humidity</button>
+                <p class="subcat">Tribe</p>
+                <button id="mapModeTribePrefFruit" class="menu">Pref. Fruit</button>
             </div>
 
             <div id="sectionTileInfo" class="menuSection">
@@ -85,6 +89,16 @@
                 <span id="outputFoodIsPlaceholder" class="output"></span>
                 <p class="subcat">Food Age</p>
                 <span id="outputFoodAge" class="output"></span>
+            </div>
+
+            <div id="sectionTribeInfo" class="menuSection">
+                <h3>Tribe Info</h3>
+                <p class="subcat">Population</p>
+                <span id="outputTribePops" class="output"></span>
+                <p class="subcat">Pref. Fruit</p>
+                <span id="outputTribePrefFruit" class="output"></span>
+                <p class="subcat">Accumulated Food</p>
+                <span id="outputTribeAccFood" class="output"></span>
             </div>
 
             <div id="sectionSettings" class="menuSection">

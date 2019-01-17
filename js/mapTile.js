@@ -13,7 +13,9 @@ function Tile(session, x, y, fertility, foodSpiece) {
         erosion: 0,
         gotFoodTick: 0,
         lostFoodTick: 0,
-        hasFood: false
+        hasFood: false,
+        isOccupied: false,
+        occupiedBy: undefined,
     };
     self.getColor = function(mapMode) {
         var hue = NaN;
@@ -57,11 +59,30 @@ function Tile(session, x, y, fertility, foodSpiece) {
             if (self.food.isPlaceholder) {hue = 0; sat = 0; lum = 30;}
             else {
                 hue = mapValue(self.food.trait.fruitType,
-                    config.disp.range.fruit.max, config.disp.range.fruit.min,
+                    config.disp.range.fruit.min, config.disp.range.fruit.max,
                     config.disp.color.hue.min, config.disp.color.hue.max);
                 lum = mapValue(self.food.strength,
                     config.disp.range.strength.min, config.disp.range.strength.max,
                     config.disp.color.lum.min, config.disp.color.lum.max);
+            }
+        }
+        else if (mapMode == "tribePrefFruit") {
+            if (self.isOccupied) {
+                hue = mapValue(self.occupiedBy.prefFruit,
+                    config.disp.range.fruit.min, config.disp.range.fruit.max,
+                    config.disp.color.hue.min, config.disp.color.hue.max);
+            }
+            else { // Show tile's food fruit type in low sat
+                if (self.food.isPlaceholder) {hue = 0; sat = 0; lum = 30;}
+                else {
+                    hue = mapValue(self.food.trait.fruitType,
+                        config.disp.range.fruit.min, config.disp.range.fruit.max,
+                        config.disp.color.hue.min, config.disp.color.hue.max);
+                    lum = mapValue(self.food.strength,
+                        config.disp.range.strength.min, config.disp.range.strength.max,
+                        config.disp.color.lum.min, config.disp.color.lum.max);
+                }
+                sat /= 3.5;
             }
         }
         else {return "#444";}

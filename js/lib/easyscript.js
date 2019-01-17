@@ -42,6 +42,11 @@ function abs(number) {
     return Math.abs(number);
 }
 
+// Absolute value
+function ceil(number) {
+    return Math.ceil(number);
+}
+
 // Get index of instance in array
 function indexOf(arr, obj) {
     for(var i=0; i<arr.length; i++) {

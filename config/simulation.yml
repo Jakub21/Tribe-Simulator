@@ -27,7 +27,7 @@ disp:
             max: 100
             min: 0
         fruit:
-            max: 20
+            max: 50
             min: 0
         strength:
             max: 100
@@ -102,8 +102,8 @@ food:
             mutateAmp: 2
             noiseScale: 10
         fruitType:
-            base: 10
-            baseAmp: 10
+            base: 25
+            baseAmp: 25
             mutateAmp: 0.25
             noiseScale: 8
 
@@ -147,5 +147,12 @@ climate:
 
 # ----------------------------------------------------------------
 tribe:
+    addIfLessThan: 30
+    startAmount: 50
     pops: # Population
         start: 100
+        minTile: 40
+    food:
+        startAcc: 20
+        incomeScale: 20
+        foodPerPop: 0.001

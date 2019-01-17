@@ -10,11 +10,11 @@ function Session(canvasId) {
         fps: config.sim.fps.default,
         paused: false,
         tiles: [],
-        foodSpieces: [],
+        tribes: [],
         width: randint(config.map.widthMin, config.map.widthMax),
         height: randint(config.map.heightMin, config.map.heightMax),
         view: {x: 0, y:0, zoom: config.disp.zoom.default,
-            mapMode: "foodPrefTemp"},
+            mapMode: "tribePrefFruit"},
         barVisible: true,
         seeds: {
             fertility: random(0, 1),
@@ -65,6 +65,13 @@ function Session(canvasId) {
                 tile.assignFood(food);
                 self.tiles.push(tile);
             }
+        }
+        // Add Tribes
+        for (var i = 0; i < config.tribe.startAmount; i ++) {
+            var x = randint(0, self.width);
+            var y = randint(0, self.height);
+            var tile = self.tiles[getIndex(x, y, self.width)];
+            self.tribes.push(Tribe(self, tile))
         }
         // Setup event handlers
         self.canvas.addEventListener('mousemove', self.handlerMouseMove);
@@ -130,6 +137,18 @@ function Session(canvasId) {
             self.climate.update();
             self.climate.updateTiles();
             self.updateTiles();
+            for (var tribe of self.tribes) {
+                tribe.update();
+            }
+            if (self.tribes.length < config.tribe.addIfLessThan) {
+                var tile = {isOccupied: true};
+                while (!(!tile.isOccupied && tile.hasFood)) {
+                    var x = randint(0, self.width);
+                    var y = randint(0, self.height);
+                    var tile = self.tiles[getIndex(x, y, self.width)];
+                }
+                self.tribes.push(Tribe(self, tile));
+            }
         }
         self.updateScreen();
     }
@@ -182,12 +201,23 @@ function Session(canvasId) {
             document.getElementById("outputFoodHumdPref").innerHTML = fRound(tile.food.trait.humdPref);
             document.getElementById("outputFoodHumdDelta").innerHTML = fRound(tile.food.trait.humdPref - tile.humd);
             document.getElementById("outputFoodIsPlaceholder").innerHTML = !tile.food.isPlaceholder;
-            var foodAge = self.tick - tile.food.createTick
+            var foodAge = self.tick - tile.food.createTick;
             if (!tile.food.isPlaceholder) {
                 document.getElementById("outputFoodAge").innerHTML = int(foodAge/yearLength) +
                 ' yrs ' + foodAge%yearLength + ' d';}
             else {
                 document.getElementById("outputFoodAge").innerHTML = NaN;}
+            // Tribe
+            if (tile.isOccupied) {
+                document.getElementById("outputTribePops").innerHTML = int(tile.occupiedBy.population);
+                document.getElementById("outputTribePrefFruit").innerHTML = fRound(tile.occupiedBy.prefFruit);
+                document.getElementById("outputTribeAccFood").innerHTML = fRound(tile.occupiedBy.accFood);
+            }
+            else {
+                document.getElementById("outputTribePops").innerHTML = "";
+                document.getElementById("outputTribePrefFruit").innerHTML = "";
+                document.getElementById("outputTribeAccFood").innerHTML = "";
+            }
         }
         else {
             // Tile
@@ -202,6 +232,10 @@ function Session(canvasId) {
             document.getElementById("outputFoodHumdDelta").innerHTML = "";
             document.getElementById("outputFoodIsPlaceholder").innerHTML = "";
             document.getElementById("outputFoodAge").innerHTML = "";
+            // Tribe
+            document.getElementById("outputTribePops").innerHTML = "";
+            document.getElementById("outputTribePrefFruit").innerHTML = "";
+            document.getElementById("outputTribeAccFood").innerHTML = "";
         }
         // Simulation info
         document.getElementById("outputFps").innerHTML = self.fps;
@@ -264,10 +298,11 @@ function Session(canvasId) {
             self.barVisible = true;
         }
         // Section choice buttons
-        document.getElementById("vievMapModes").onclick = function(){self.showSection("mapModes");};
-        document.getElementById("vievTileInfo").onclick = function(){self.showSection("tileInfo");};
-        document.getElementById("vievFoodInfo").onclick = function(){self.showSection("foodInfo");};
-        document.getElementById("vievSimSettings").onclick = function(){self.showSection("simSettings");};
+        document.getElementById("viewMapModes").onclick = function(){self.showSection("mapModes");};
+        document.getElementById("viewTileInfo").onclick = function(){self.showSection("tileInfo");};
+        document.getElementById("viewFoodInfo").onclick = function(){self.showSection("foodInfo");};
+        document.getElementById("viewTribeInfo").onclick = function(){self.showSection("tribeInfo");};
+        document.getElementById("viewSimSettings").onclick = function(){self.showSection("simSettings");};
         // Map mode choice buttons
         document.getElementById("mapModeTemp").onclick = function(){self.toggleMapMode("temp");};
         document.getElementById("mapModeHumd").onclick = function(){self.toggleMapMode("humd");};
@@ -276,8 +311,10 @@ function Session(canvasId) {
             function(){self.toggleMapMode("foodFruitType");};
         document.getElementById("mapModeFoodPrefTemp").onclick =
             function(){self.toggleMapMode("foodPrefTemp");};
-            document.getElementById("mapModeFoodPrefHumd").onclick =
-                function(){self.toggleMapMode("foodPrefHumd");};
+        document.getElementById("mapModeFoodPrefHumd").onclick =
+            function(){self.toggleMapMode("foodPrefHumd");};
+        document.getElementById("mapModeTribePrefFruit").onclick =
+            function(){self.toggleMapMode("tribePrefFruit");};
         // Simulation Speed
         document.getElementById("fpsIncrease").onclick = function(){self.changeSpeed(1);};
         document.getElementById("fpsDecrease").onclick = function(){self.changeSpeed(-1);};
@@ -289,29 +326,41 @@ function Session(canvasId) {
         var sectMapModes = document.getElementById("sectionMapmodes");
         var secTileInfo = document.getElementById("sectionTileInfo");
         var secFoodInfo = document.getElementById("sectionFoodInfo");
+        var secTribeInfo = document.getElementById("sectionTribeInfo");
         var secSimSettings = document.getElementById("sectionSettings");
         if (section == "mapModes") {
             sectMapModes.style.display = "block";
             secTileInfo.style.display = "none";
             secFoodInfo.style.display = "none";
+            secTribeInfo.style.display = "none";
             secSimSettings.style.display = "none";
         }
         else if (section == "tileInfo") {
             sectMapModes.style.display = "none";
             secTileInfo.style.display = "block";
             secFoodInfo.style.display = "none";
+            secTribeInfo.style.display = "none";
             secSimSettings.style.display = "none";
         }
         else if (section == "foodInfo") {
             sectMapModes.style.display = "none";
             secTileInfo.style.display = "none";
             secFoodInfo.style.display = "block";
+            secTribeInfo.style.display = "none";
+            secSimSettings.style.display = "none";
+        }else if (section == "tribeInfo") {
+            sectMapModes.style.display = "none";
+            secTileInfo.style.display = "none";
+            secTileInfo.style.display = "none";
+            secFoodInfo.style.display = "none";
+            secTribeInfo.style.display = "block";
             secSimSettings.style.display = "none";
         }
         else if (section == "simSettings") {
             sectMapModes.style.display = "none";
             secTileInfo.style.display = "none";
             secFoodInfo.style.display = "none";
+            secTribeInfo.style.display = "none";
             secSimSettings.style.display = "block";
         }
     }
