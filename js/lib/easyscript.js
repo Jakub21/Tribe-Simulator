@@ -73,6 +73,15 @@ function getNeighbourIndices(x, y, width, height) {
     return indices;
 }
 
+// Choose random element from array
+function randChoice(arr) {
+    var index = randint(0, arr.length);
+    if (arr[index] == undefined) {
+        console.log('Choosen undefined');
+    }
+    return arr[index];
+}
+
 // Converts HSL to Hex RGB
 // Copied from StackOverflow
 // https://stackoverflow.com/a/44134328

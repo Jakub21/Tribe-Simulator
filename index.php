@@ -77,6 +77,10 @@
                 <h3>Food Info</h3>
                 <p class="subcat">Strength</p>
                 <span id="outputFoodStrength" class="output"></span>
+                <p class="subcat">Fruit Type</p>
+                <span id="outputFoodFruit" class="output"></span>
+                <br/><br/> <!--TODO-->
+                <h3>Details</h3>
                 <p class="subcat">Temp - Pref</p>
                 <span id="outputFoodTempPref" class="output"></span>
                 <p class="subcat">Temp - Delta</p>
@@ -95,6 +99,8 @@
                 <h3>Tribe Info</h3>
                 <p class="subcat">Population</p>
                 <span id="outputTribePops" class="output"></span>
+                <p class="subcat">Is Settled</p>
+                <span id="outputTribeIsSettled" class="output"></span>
                 <p class="subcat">Pref. Fruit</p>
                 <span id="outputTribePrefFruit" class="output"></span>
                 <p class="subcat">Accumulated Food</p>

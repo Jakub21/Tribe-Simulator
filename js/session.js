@@ -196,6 +196,7 @@ function Session(canvasId) {
             document.getElementById("outputFert").innerHTML = fRound(tile.fertility);
             // Food
             document.getElementById("outputFoodStrength").innerHTML = fRound(tile.food.strength);
+            document.getElementById("outputFoodFruit").innerHTML = fRound(tile.food.trait.fruitType);
             document.getElementById("outputFoodTempPref").innerHTML = fRound(tile.food.trait.tempPref);
             document.getElementById("outputFoodTempDelta").innerHTML = fRound(tile.food.trait.tempPref - tile.temp);
             document.getElementById("outputFoodHumdPref").innerHTML = fRound(tile.food.trait.humdPref);
@@ -204,19 +205,21 @@ function Session(canvasId) {
             var foodAge = self.tick - tile.food.createTick;
             if (!tile.food.isPlaceholder) {
                 document.getElementById("outputFoodAge").innerHTML = int(foodAge/yearLength) +
-                ' yrs ' + foodAge%yearLength + ' d';}
+                    ' yrs ' + foodAge%yearLength + ' d';}
             else {
                 document.getElementById("outputFoodAge").innerHTML = NaN;}
             // Tribe
             if (tile.isOccupied) {
                 document.getElementById("outputTribePops").innerHTML = int(tile.occupiedBy.population);
                 document.getElementById("outputTribePrefFruit").innerHTML = fRound(tile.occupiedBy.prefFruit);
-                document.getElementById("outputTribeAccFood").innerHTML = fRound(tile.occupiedBy.accFood);
+                document.getElementById("outputTribeAccFood").innerHTML = fRound(tile.occupiedBy.accumFood);
+                document.getElementById("outputTribeIsSettled").innerHTML = tile.occupiedBy.isSettled;
             }
             else {
                 document.getElementById("outputTribePops").innerHTML = "";
                 document.getElementById("outputTribePrefFruit").innerHTML = "";
                 document.getElementById("outputTribeAccFood").innerHTML = "";
+                document.getElementById("outputTribeIsSettled").innerHTML = "";
             }
         }
         else {
@@ -226,6 +229,7 @@ function Session(canvasId) {
             document.getElementById("outputFert").innerHTML = "";
             // Food
             document.getElementById("outputFoodStrength").innerHTML = "";
+            document.getElementById("outputFoodFruit").innerHTML = "";
             document.getElementById("outputFoodTempPref").innerHTML = "";
             document.getElementById("outputFoodTempDelta").innerHTML = "";
             document.getElementById("outputFoodHumdPref").innerHTML = "";
@@ -236,6 +240,7 @@ function Session(canvasId) {
             document.getElementById("outputTribePops").innerHTML = "";
             document.getElementById("outputTribePrefFruit").innerHTML = "";
             document.getElementById("outputTribeAccFood").innerHTML = "";
+            document.getElementById("outputTribeIsSettled").innerHTML = "";
         }
         // Simulation info
         document.getElementById("outputFps").innerHTML = self.fps;

@@ -19,7 +19,7 @@ function Tile(session, x, y, fertility, foodSpiece) {
     };
     self.getColor = function(mapMode) {
         var hue = NaN;
-        var sat = config.disp.color.sat;
+        var sat = config.disp.color.sat.default;
         var lum = config.disp.color.lum.default;
         if (mapMode == "fert") {
             hue = mapValue(self.fertility,
@@ -82,7 +82,9 @@ function Tile(session, x, y, fertility, foodSpiece) {
                         config.disp.range.strength.min, config.disp.range.strength.max,
                         config.disp.color.lum.min, config.disp.color.lum.max);
                 }
-                sat /= 3.5;
+                sat /= config.disp.color.sat.foodTribeScale;
+                lum = mapValue(lum, config.disp.color.lum.min, config.disp.color.lum.max,
+                    config.disp.color.lum.foodTribe.min, config.disp.color.lum.foodTribe.max);
             }
         }
         else {return "#444";}
