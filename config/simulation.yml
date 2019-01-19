@@ -13,7 +13,7 @@ disp:
     zoom:
         max: 1.2
         min: 0.15
-        default: 0.27
+        default: 0.36
     elems: # Size of elements in x1 zoom
         tile: 55
     range:
@@ -60,10 +60,10 @@ disp:
 
 # ----------------------------------------------------------------
 map:
-    widthMin: 54
-    widthMax: 54
-    heightMin: 85
-    heightMax: 85
+    widthMin: 41
+    widthMax: 41
+    heightMin: 64
+    heightMax: 64
 
 # ----------------------------------------------------------------
 food:
@@ -157,8 +157,13 @@ tribe:
         start: 100
         minTile: 40
         desiredPerTile: 120
-        maxBirthsPerPop: 0.1 # per tick
-        birthCost: 0.5 # cost in food
+    birth:
+        chance: 0.1 # chance of checking if can birth
+        batch: # birth size is multiplied by rand. from this scope
+            min: 0.1
+            max: 1
+        foodCost: 1 # cost in food
+        maxPerPop: 0.01 # per tick
     food:
         startAccum: 20
         incomeScale: 15
@@ -173,5 +178,11 @@ tribe:
         minNotMigrated: 1.2 # [years]
         foodCost: 50
     expand:
+        chance: 0.05
+        cooldown: # [years]
+            base: 1
+            decrease: 0.002 # per tile
+            min: 0.2
         foodCost: 20
+        minPops: 100
     migrationCooldown: 0.1 # [years]

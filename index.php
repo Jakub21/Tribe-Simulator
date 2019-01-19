@@ -101,6 +101,8 @@
                 <span id="outputTribePops" class="output"></span>
                 <p class="subcat">Is Settled</p>
                 <span id="outputTribeIsSettled" class="output"></span>
+                <p class="subcat">Num. of Tiles</p>
+                <span id="outputTribeNumOfTiles" class="output"></span>
                 <p class="subcat">Pref. Fruit</p>
                 <span id="outputTribePrefFruit" class="output"></span>
                 <p class="subcat">Accumulated Food</p>

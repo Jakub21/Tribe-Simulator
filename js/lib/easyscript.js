@@ -75,10 +75,8 @@ function getNeighbourIndices(x, y, width, height) {
 
 // Choose random element from array
 function randChoice(arr) {
-    var index = randint(0, arr.length);
-    if (arr[index] == undefined) {
-        console.log('Choosen undefined');
-    }
+    if (arr.length == 0) return;
+    var index = randint(0, arr.length-1);
     return arr[index];
 }
 

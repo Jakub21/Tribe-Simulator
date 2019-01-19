@@ -214,12 +214,14 @@ function Session(canvasId) {
                 document.getElementById("outputTribePrefFruit").innerHTML = fRound(tile.occupiedBy.prefFruit);
                 document.getElementById("outputTribeAccFood").innerHTML = fRound(tile.occupiedBy.accumFood);
                 document.getElementById("outputTribeIsSettled").innerHTML = tile.occupiedBy.isSettled;
+                document.getElementById("outputTribeNumOfTiles").innerHTML = tile.occupiedBy.tiles.length;
             }
             else {
                 document.getElementById("outputTribePops").innerHTML = "";
                 document.getElementById("outputTribePrefFruit").innerHTML = "";
                 document.getElementById("outputTribeAccFood").innerHTML = "";
                 document.getElementById("outputTribeIsSettled").innerHTML = "";
+                document.getElementById("outputTribeNumOfTiles").innerHTML = "";
             }
         }
         else {
@@ -241,6 +243,7 @@ function Session(canvasId) {
             document.getElementById("outputTribePrefFruit").innerHTML = "";
             document.getElementById("outputTribeAccFood").innerHTML = "";
             document.getElementById("outputTribeIsSettled").innerHTML = "";
+            document.getElementById("outputTribeNumOfTiles").innerHTML = "";
         }
         // Simulation info
         document.getElementById("outputFps").innerHTML = self.fps;
