@@ -16,13 +16,21 @@ function Tribe(session, capitalTile) {
 
     self.construct = function() {
         self.name = randomName();
-        var base = config.food.trait.fruitType.base;
-        var spread = config.food.trait.fruitType.baseAmp;
+        // Pref. Fruit Type
+        //var base = config.food.trait.fruitType.base; // TODO
+        //var amp = config.food.trait.fruitType.baseAmp;
         self.prefFruit = int(self.capital.food.trait.fruitType);
         if (self.prefFruit == NaN) {
             self.prefFruit = randint(0, 50); // TODO: Use references to config instead of constants
         }
+        // Traits
+        var base = config.tribe.migrate.cooldown.base;
+        var amp = config.tribe.migrate.cooldown.amp;
+        self.migrationCooldown = (base + random(-amp, amp)) * config.sim.yearLength;
+        // Tile
         self.occupyTile(self.capital);
+        self.tiles = [];
+        self.tiles.push(self.capital);
     }
 
     self.update = function() {
@@ -30,14 +38,14 @@ function Tribe(session, capitalTile) {
         if (random() >= config.tribe.birth.chance)
             self.expandPopulation();
         // Basic checks
-        if (self.population <= 0) {
+        if (self.population <= config.tribe.pops.min) {
             self.die();
         }
-        if (self.isSettled) { // Migration
+        if (self.isSettled) { // Expansion
             if (random() >= config.tribe.expand.chance)
                 self.checkExpansions();
         }
-        else { // Expansion
+        else { // Migration
             self.checkBestMigration();
             self.checkSettle();
         }
@@ -69,7 +77,7 @@ function Tribe(session, capitalTile) {
 
     self.expandPopulation = function() {
         // Check if can expand pops
-        var desiredPop = self.tiles.length * config.tribe.pops.desiredPerTile;
+        var desiredPop = self.tiles.length * config.tribe.pops.desired;
         var maxPopChange = ceil(self.population * config.tribe.birth.maxPerPop);
         if (self.population < desiredPop) {
             var canSpend = self.accumFood - config.tribe.food.desiredAccum;
@@ -87,20 +95,23 @@ function Tribe(session, capitalTile) {
     self.occupyTile = function(tile) {
         tile.isOccupied = true;
         tile.occupiedBy = self;
-        self.tiles.push(tile);
     }
 
     self.releaseTile = function(tile) {
         tile.isOccupied = false;
         tile.occupiedBy = undefined;
-        self.tiles.splice(indexOf(self.tiles, tile), 1);
     }
 
     self.die = function() {
         for (var tile of self.tiles) {
-            self.releaseTile(tile);
+            tile.isOccupied = false;
+            tile.occupiedBy = undefined;
         }
-        self.session.tribes.splice(indexOf(self.session.tribes, self), 1);
+        self.capital.isOccupied = false;
+        self.capital.occupiedBy = undefined;
+        var prevLen = self.session.tribes.length;
+        var i = indexOf(self.session.tribes, self);
+        self.session.tribes.splice(i, 1);
     }
 
     // Not settled
@@ -111,28 +122,26 @@ function Tribe(session, capitalTile) {
         if (nbs.length == 0) return;
         var currFood = self.capital.food;
         var currFruitDelta = self.prefFruit - currFood.trait.fruitType;
-        var currStrength = currFood.strength;
         if (currFood.isPlaceholder) {
             currFruitDelta = Infinity;
-            currStrength = 0;
         }
-        currStrength *= config.tribe.migrate.strengthRatio;
         var onlyPlaceholders = true;
         var bestChoice = {tile: self.capital,
-            strength: currStrength, fruitDelta: currFruitDelta};
+            fruitDelta: currFruitDelta};
         for (var nb of nbs) {
             if (nb.isOccupied) continue;
             if (!nb.food.isPlaceholder) onlyPlaceholders = false;
             var nbFruitDelta = self.prefFruit - nb.food.trait.fruitType;
-            var nbStrength = nb.food.strength;
-            if (nbStrength >= bestChoice.strength && nbFruitDelta < bestChoice.fruitDelta) {
+            if (nbFruitDelta < bestChoice.fruitDelta) {
                 bestChoice.tile = nb;
-                bestChoice.strength = nbStrength;
                 bestChoice.fruitDelta = nbFruitDelta;
             }
         }
         // Random migration (tribe is far from food it likes)
-        if (bestChoice.fruitDelta > config.tribe.migrate.randomAtdelta || onlyPlaceholders) {
+        var couldSettle = self.checkSettlementViable();
+        if (bestChoice.fruitDelta > config.tribe.migrate.randomAtDelta
+                || onlyPlaceholders
+                || (couldSettle && bestChoice.fruitDelta > config.tribe.settle.maxFruitDelta)) {
             self.migrate(randChoice(nbs)); }
         // Normal migration
         if (bestChoice.tile != self.capital) {
@@ -142,30 +151,43 @@ function Tribe(session, capitalTile) {
     self.migrate = function(tile) {
         if (self.isSettled) return;
         if (tile.isOccupied) return;
-        var cd = config.tribe.migrationCooldown * config.sim.yearLength;
+        var cd = self.migrationCooldown * config.sim.yearLength;
         var elapsed = self.session.tick - self.lastMigration;
         if (elapsed < cd) return;
         self.lastMigration = self.session.tick;
         self.releaseTile(self.capital);
         self.capital = tile;
+        self.tiles = [];
         self.occupyTile(self.capital);
+        self.tiles.push(tile);
+        self.accumFood -= config.tribe.migrate.foodCost;
+    }
+
+    self.checkSettlementViable = function() {
+        var result = true;
+        // Check if has enough food
+        if (self.accumFood < config.tribe.settle.foodCost) result = false;
+        // Check if has enough pops
+        if (self.population < config.tribe.settle.minPops) result = false;
+        // Check if enough time has elapsed
+        var mustNotMigrate = config.tribe.settle.minNotMigrated * config.sim.yearLength;
+        var notMigrated = self.session.tick - self.lastMigration;
+        if (notMigrated < mustNotMigrate) result = false;
+        // NOTE: Tile - specific attributes are not checked here
+        return result
     }
 
     self.checkSettle = function() {
-        var mustNotMigrate = config.tribe.settle.minNotMigrated * config.sim.yearLength;
-        var notMigrated = self.session.tick - self.lastMigration;
-        if (notMigrated < mustNotMigrate) return false;
+        if (!self.checkSettlementViable()) return;
         var fruitDelta = abs(self.capital.food.trait.fruitType - self.prefFruit);
-        if (fruitDelta > config.tribe.settle.maxFruitDelta) return false;
-        // After all this was checked...
+        if (fruitDelta > config.tribe.settle.maxFruitDelta) return;
         self.settle();
     }
 
     self.settle = function() {
-        var cost = config.tribe.settle.foodCost;
-        if (self.accumFood < cost) return;
+        if (!self.checkSettlementViable()) return;
         self.isSettled = true;
-        self.accumFood -= cost;
+        self.accumFood -= config.tribe.settle.foodCost;
     }
 
     // Settled
@@ -188,6 +210,7 @@ function Tribe(session, capitalTile) {
             if (nb.isOccupied) continue;
             if (nb.food.isPlaceholder) continue;
             var nbFruitDelta = self.prefFruit - nb.food.trait.fruitType;
+            if (nbFruitDelta > config.tribe.expand.maxFruitDelta) continue;
             if (nbFruitDelta < bestChoice.fruitDelta) {
                 bestChoice.tile = nb;
                 bestChoice.fruitDelta = nbFruitDelta;
@@ -198,17 +221,24 @@ function Tribe(session, capitalTile) {
     }
 
     self.expand = function(tile) {
+        // Cooldown
         var cooldown = config.tribe.expand.cooldown.base * config.sim.yearLength;
         cooldown -= self.tiles.length * config.tribe.expand.cooldown.decrease * config.sim.yearLength;
         var min = config.tribe.expand.cooldown.min * config.sim.yearLength;
         if (cooldown < min) cooldown = min;
         var elapsed = self.session.tick - self.lastExpand;
         if (cooldown > elapsed) return;
-        if (tile.food.isPlaceholder) return;
-        if (self.population < config.tribe.expand.minPops) return;
-        self.accumFood -= config.tribe.expand.foodCost;
-        self.occupyTile(tile);
         self.lastExpand = self.session.tick;
+        // Check food
+        var fruitDelta = self.prefFruit - tile.food.trait.fruitType;
+        if (fruitDelta > config.tribe.expand.maxFruitDelta) return;
+        if (tile.food.isPlaceholder) return;
+        // Check pops
+        if (self.population < config.tribe.expand.minPops * self.tiles.length) return;
+        self.accumFood -= config.tribe.expand.foodCost;
+        // Apply
+        self.occupyTile(tile);
+        self.tiles.push(tile);
     }
 
     self.construct();

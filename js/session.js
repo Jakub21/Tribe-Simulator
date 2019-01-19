@@ -67,7 +67,7 @@ function Session(canvasId) {
             }
         }
         // Add Tribes
-        for (var i = 0; i < config.tribe.startAmount; i ++) {
+        for (var i = 0; i < config.tribe.amount.start; i ++) {
             var x = randint(0, self.width);
             var y = randint(0, self.height);
             var tile = self.tiles[getIndex(x, y, self.width)];
@@ -138,19 +138,22 @@ function Session(canvasId) {
             self.climate.updateTiles();
             self.updateTiles();
             for (var tribe of self.tribes) {
-                tribe.update();
-            }
-            if (self.tribes.length < config.tribe.addIfLessThan) {
-                var tile = {isOccupied: true};
-                while (!(!tile.isOccupied && tile.hasFood)) {
-                    var x = randint(0, self.width);
-                    var y = randint(0, self.height);
-                    var tile = self.tiles[getIndex(x, y, self.width)];
-                }
-                self.tribes.push(Tribe(self, tile));
+                tribe.update(); }
+            if (self.tribes.length < config.tribe.amount.min) {
+                self.addRandomTribe();
             }
         }
         self.updateScreen();
+    }
+
+    self.addRandomTribe = function() {
+        var tile = {isOccupied: true};
+        while (!(!tile.isOccupied && tile.hasFood)) {
+            var x = randint(0, self.width);
+            var y = randint(0, self.height);
+            var tile = self.tiles[getIndex(x, y, self.width)];
+        }
+        self.tribes.push(Tribe(self, tile));
     }
 
     self.updateCanvasSize = function() {
@@ -191,9 +194,10 @@ function Session(canvasId) {
         if ((pt >= 0) && (pt < self.width*self.height)) {
             var tile = self.tiles[pt]
             // Tile
-            document.getElementById("outputTemp").innerHTML = fRound(tile.temp);
-            document.getElementById("outputHumd").innerHTML = fRound(tile.humd);
-            document.getElementById("outputFert").innerHTML = fRound(tile.fertility);
+            document.getElementById("outputTileOccupied").innerHTML = tile.isOccupied;
+            document.getElementById("outputTileTemp").innerHTML = fRound(tile.temp);
+            document.getElementById("outputTileHumd").innerHTML = fRound(tile.humd);
+            document.getElementById("outputTileFert").innerHTML = fRound(tile.fertility);
             // Food
             document.getElementById("outputFoodStrength").innerHTML = fRound(tile.food.strength);
             document.getElementById("outputFoodFruit").innerHTML = fRound(tile.food.trait.fruitType);
@@ -228,9 +232,10 @@ function Session(canvasId) {
         }
         else {
             // Tile
-            document.getElementById("outputTemp").innerHTML = "";
-            document.getElementById("outputHumd").innerHTML = "";
-            document.getElementById("outputFert").innerHTML = "";
+            document.getElementById("outputTileOccupied").innerHTML = "";
+            document.getElementById("outputTileTemp").innerHTML = "";
+            document.getElementById("outputTileHumd").innerHTML = "";
+            document.getElementById("outputTileFert").innerHTML = "";
             // Food
             document.getElementById("outputFoodStrength").innerHTML = "";
             document.getElementById("outputFoodFruit").innerHTML = "";

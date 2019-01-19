@@ -4,19 +4,19 @@
 sim:
     fps:
         max: 240
-        default: 240
+        default: 40
         step: 10
-    yearLength: 365
+    yearLength: 365 # [ticks]
 
 # ----------------------------------------------------------------
 disp:
     zoom:
-        max: 1.2
-        min: 0.15
-        default: 0.36
+        max: 1.5
+        min: 0.3
+        default: 1
     elems: # Size of elements in x1 zoom
-        tile: 55
-    range:
+        tile: 18
+    range: # Values mapped to colors
         fert:
             max: 1.2
             min: 0.8
@@ -32,7 +32,7 @@ disp:
         strength:
             max: 100
             min: 0
-    color:
+    color: # Color definitions
         sat:
             default: 80
             foodTribeScale: 4.5
@@ -60,10 +60,10 @@ disp:
 
 # ----------------------------------------------------------------
 map:
-    widthMin: 41
-    widthMax: 41
-    heightMin: 64
-    heightMax: 64
+    widthMin: 43
+    widthMax: 43
+    heightMin: 67
+    heightMax: 67
 
 # ----------------------------------------------------------------
 food:
@@ -118,8 +118,8 @@ tile:
         baseAmp: 0.3
         noiseScale: 22
     ownedFood:
-        diedCooldown: 0.334 #[years]
-        newChance: 0.9 #[%]
+        diedCooldown: 0.334 # [years]
+        newChance: 0.9 # [%]
 
 # ----------------------------------------------------------------
 climate:
@@ -142,7 +142,7 @@ climate:
             step: 0.002
             backwdFactor: 0.85
     # Events
-    event:
+    event: # Events are not implemented yet
         globalDrought:
             minInterval: 2000 # 2000 -> 20 yrs
             chance: 0.005
@@ -151,38 +151,43 @@ climate:
 
 # ----------------------------------------------------------------
 tribe:
-    addIfLessThan: 50
-    startAmount: 80
+    amount: # Amount of tribes in simulation
+        start: 80
+        min: 30
     pops: # Population
-        start: 100
-        minTile: 40
-        desiredPerTile: 120
+        start: 75
+        min: 15
+        desired: 125 # per tile
     birth:
-        chance: 0.1 # chance of checking if can birth
-        batch: # birth size is multiplied by rand. from this scope
-            min: 0.1
+        chance: 0.34 # chance of checking if can birth
+        batch:
+            min: 0.2
             max: 1
-        foodCost: 1 # cost in food
-        maxPerPop: 0.01 # per tick
+        foodCost: 2.5 # cost in food
+        maxPerPop: 0.02 # max births per population, per tick
     food:
         startAccum: 20
-        incomeScale: 15
+        incomeScale: 5
         foodPerPop: 0.002
         desiredAccum: 30 # will not expand pops if below
     migrate:
-        randomAtdelta: 10
-        minStrengthRatio: 0.7
+        randomAtDelta: 12 # (Fruit Delta) Enables random migration
+        minStrengthRatio: 0.7 # (Food Strength)
+        foodCost: 2
+        cooldown: # Cooldown is tribe-specific
+            base: 0.1
+            amp: 0.02
     settle:
         minPops: 50
         maxFruitDelta: 5
         minNotMigrated: 1.2 # [years]
-        foodCost: 50
+        foodCost: 100
     expand:
-        chance: 0.05
+        chance: 0.075
         cooldown: # [years]
             base: 1
             decrease: 0.002 # per tile
             min: 0.2
-        foodCost: 20
-        minPops: 100
-    migrationCooldown: 0.1 # [years]
+        foodCost: 50
+        minPops: 100 # per tile
+        maxFruitDelta: 8

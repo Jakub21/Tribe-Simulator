@@ -65,12 +65,14 @@
                 <h3>Tile Info</h3>
                 <p class="subcat">Index</p>
                 <span id="outputIndex" class="output"></span>
+                <p class="subcat">Is Occupied</p>
+                <span id="outputTileOccupied" class="output"></span>
                 <p class="subcat">Temperature</p>
-                <span id="outputTemp" class="output"></span>
+                <span id="outputTileTemp" class="output"></span>
                 <p class="subcat">Humidity</p>
-                <span id="outputHumd" class="output"></span>
+                <span id="outputTileHumd" class="output"></span>
                 <p class="subcat">Soil Fertility</p>
-                <span id="outputFert" class="output"></span>
+                <span id="outputTileFert" class="output"></span>
             </div>
 
             <div id="sectionFoodInfo" class="menuSection">
