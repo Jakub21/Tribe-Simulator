@@ -210,6 +210,7 @@ function Session(canvasId) {
                 document.getElementById("outputFoodAge").innerHTML = NaN;}
             // Tribe
             if (tile.isOccupied) {
+                document.getElementById("outputTribeName").innerHTML = tile.occupiedBy.name;
                 document.getElementById("outputTribePops").innerHTML = int(tile.occupiedBy.population);
                 document.getElementById("outputTribePrefFruit").innerHTML = fRound(tile.occupiedBy.prefFruit);
                 document.getElementById("outputTribeAccFood").innerHTML = fRound(tile.occupiedBy.accumFood);
@@ -217,6 +218,7 @@ function Session(canvasId) {
                 document.getElementById("outputTribeNumOfTiles").innerHTML = tile.occupiedBy.tiles.length;
             }
             else {
+                document.getElementById("outputTribeName").innerHTML = "";
                 document.getElementById("outputTribePops").innerHTML = "";
                 document.getElementById("outputTribePrefFruit").innerHTML = "";
                 document.getElementById("outputTribeAccFood").innerHTML = "";
@@ -239,6 +241,7 @@ function Session(canvasId) {
             document.getElementById("outputFoodIsPlaceholder").innerHTML = "";
             document.getElementById("outputFoodAge").innerHTML = "";
             // Tribe
+            document.getElementById("outputTribeName").innerHTML = "";
             document.getElementById("outputTribePops").innerHTML = "";
             document.getElementById("outputTribePrefFruit").innerHTML = "";
             document.getElementById("outputTribeAccFood").innerHTML = "";

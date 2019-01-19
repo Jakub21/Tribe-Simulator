@@ -1,6 +1,6 @@
 "use strict";
 /* ----------------------------------------------------------------
-* Wrappers for Math functions
+* Wrappers for Math functions and other helper functions
 */
 
 // Random float greater than $from and less than $to
@@ -78,6 +78,33 @@ function randChoice(arr) {
     if (arr.length == 0) return;
     var index = randint(0, arr.length-1);
     return arr[index];
+}
+
+// Generate random name
+function randomName() {
+    var minLen = 5;
+    var maxLen = 9;
+    var vs = ['e', 'y', 'u', 'i', 'o', 'a'];
+    var cs = ['q', 'w', 'r', 't', 'p', 's', 'd', 'f', 'g', 'h',
+        'j', 'k', 'l', 'z', 'x', 'c', 'v', 'b', 'n', 'm'];
+    var all = vs.concat(cs);
+    var type = [];
+    var result = '';
+    for (var index = 0; index < randint(minLen, maxLen); index++) {
+        if (index == 0) {
+            var l = randChoice(all);
+            if (vs.includes(l)) type.push('v');
+            else type.push('c');
+            result += l.toUpperCase(); }
+        else {
+            if (type[type.length-1] == 'c') {
+                result += randChoice(vs);
+                type.push('v'); }
+            else {
+                result += randChoice(cs);
+                type.push('c'); } }
+    }
+    return result;
 }
 
 // Converts HSL to Hex RGB

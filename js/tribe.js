@@ -15,6 +15,7 @@ function Tribe(session, capitalTile) {
     };
 
     self.construct = function() {
+        self.name = randomName();
         var base = config.food.trait.fruitType.base;
         var spread = config.food.trait.fruitType.baseAmp;
         self.prefFruit = int(self.capital.food.trait.fruitType);

@@ -97,6 +97,8 @@
 
             <div id="sectionTribeInfo" class="menuSection">
                 <h3>Tribe Info</h3>
+                <p class="subcat">Name</p>
+                <span id="outputTribeName" class="output"></span>
                 <p class="subcat">Population</p>
                 <span id="outputTribePops" class="output"></span>
                 <p class="subcat">Is Settled</p>
