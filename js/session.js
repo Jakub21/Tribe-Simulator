@@ -138,7 +138,11 @@ function Session(canvasId) {
             self.climate.updateTiles();
             self.updateTiles();
             for (var tribe of self.tribes) {
-                tribe.update(); }
+                tribe.update();
+                if (!tribe.alive) {
+                    self.tribes.splice(indexOf(self.tribes, tribe), 1);
+                }
+            }
             if (self.tribes.length < config.tribe.amount.min) {
                 self.addRandomTribe();
             }
@@ -215,19 +219,30 @@ function Session(canvasId) {
             // Tribe
             if (tile.isOccupied) {
                 document.getElementById("outputTribeName").innerHTML = tile.occupiedBy.name;
-                document.getElementById("outputTribePops").innerHTML = int(tile.occupiedBy.population);
-                document.getElementById("outputTribePrefFruit").innerHTML = fRound(tile.occupiedBy.prefFruit);
-                document.getElementById("outputTribeAccFood").innerHTML = fRound(tile.occupiedBy.accumFood);
+                document.getElementById("outputTribePops").innerHTML = tile.occupiedBy.getPopulation();
                 document.getElementById("outputTribeIsSettled").innerHTML = tile.occupiedBy.isSettled;
-                document.getElementById("outputTribeNumOfTiles").innerHTML = tile.occupiedBy.tiles.length;
+                document.getElementById("outputTribeNumOfTiles").innerHTML = tile.occupiedBy.sections.length;
+                document.getElementById("outputTribeFoodAcc").innerHTML = fRound(tile.occupiedBy.food.accum);
+                document.getElementById("outputTribeFoodMax").innerHTML = fRound(
+                    tile.occupiedBy.getCapacity());
+                document.getElementById("outputTribeFoodBil").innerHTML = fRound(tile.occupiedBy.food.bilance);
+                document.getElementById("outputTribeFoodYearBil").innerHTML = fRound(
+                    tile.occupiedBy.getYearBilance() / config.sim.yearLength);
+                document.getElementById("outputTribeRawIncome").innerHTML = fRound(
+                    tile.occupiedBy.food.rawIncome);
+                document.getElementById("outputTribePrefFruit").innerHTML = tile.occupiedBy.prefFruit;
             }
             else {
                 document.getElementById("outputTribeName").innerHTML = "";
                 document.getElementById("outputTribePops").innerHTML = "";
-                document.getElementById("outputTribePrefFruit").innerHTML = "";
-                document.getElementById("outputTribeAccFood").innerHTML = "";
                 document.getElementById("outputTribeIsSettled").innerHTML = "";
                 document.getElementById("outputTribeNumOfTiles").innerHTML = "";
+                document.getElementById("outputTribeFoodAcc").innerHTML = "";
+                document.getElementById("outputTribeFoodMax").innerHTML = "";
+                document.getElementById("outputTribeFoodBil").innerHTML = "";
+                document.getElementById("outputTribeFoodYearBil").innerHTML = "";
+                document.getElementById("outputTribeRawIncome").innerHTML = "";
+                document.getElementById("outputTribePrefFruit").innerHTML = "";
             }
         }
         else {
@@ -248,10 +263,14 @@ function Session(canvasId) {
             // Tribe
             document.getElementById("outputTribeName").innerHTML = "";
             document.getElementById("outputTribePops").innerHTML = "";
-            document.getElementById("outputTribePrefFruit").innerHTML = "";
-            document.getElementById("outputTribeAccFood").innerHTML = "";
             document.getElementById("outputTribeIsSettled").innerHTML = "";
             document.getElementById("outputTribeNumOfTiles").innerHTML = "";
+            document.getElementById("outputTribeFoodAcc").innerHTML = "";
+            document.getElementById("outputTribeFoodMax").innerHTML = "";
+            document.getElementById("outputTribeFoodBil").innerHTML = "";
+            document.getElementById("outputTribeFoodYearBil").innerHTML = "";
+            document.getElementById("outputTribeRawIncome").innerHTML = "";
+            document.getElementById("outputTribePrefFruit").innerHTML = "";
         }
         // Simulation info
         document.getElementById("outputFps").innerHTML = self.fps;

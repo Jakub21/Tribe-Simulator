@@ -92,15 +92,23 @@ function randomName() {
     for (var index = 0; index < randint(minLen, maxLen); index++) {
         if (index == 0) {
             var l = randChoice(all);
-            if (vs.includes(l)) type.push('v');
-            else type.push('c');
+            if (vs.includes(l)) {
+                type.push('v');
+                vs.splice(indexOf(vs, l), 1); }
+            else {
+                type.push('c');
+                cs.splice(indexOf(cs, l), 1); }
             result += l.toUpperCase(); }
         else {
             if (type[type.length-1] == 'c') {
-                result += randChoice(vs);
+                var l = randChoice(vs);
+                result += l;
+                vs.splice(indexOf(vs, l), 1);
                 type.push('v'); }
             else {
-                result += randChoice(cs);
+                var l = randChoice(cs);
+                result += l;
+                cs.splice(indexOf(cs, l), 1);
                 type.push('c'); } }
     }
     return result;

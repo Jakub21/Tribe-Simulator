@@ -132,5 +132,13 @@ function Tile(session, x, y, fertility, foodSpiece) {
         }
         self.food.update();
     }
+    self.occupy = function(tribe) {
+        self.isOccupied = true;
+        self.occupiedBy = tribe;
+    }
+    self.release = function() {
+        self.isOccupied = false;
+        self.occupiedBy = undefined;
+    }
     return self;
 }

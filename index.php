@@ -19,6 +19,7 @@
     <script src="js/mapTile.js"></script>
     <script src="js/climate.js"></script>
     <script src="js/tribe.js"></script>
+    <script src="js/section.js"></script>
     <script src="js/session.js"></script>
     <body>
         <canvas id="mainCanvas"></canvas>
@@ -107,10 +108,20 @@
                 <span id="outputTribeIsSettled" class="output"></span>
                 <p class="subcat">Num. of Tiles</p>
                 <span id="outputTribeNumOfTiles" class="output"></span>
-                <p class="subcat">Pref. Fruit</p>
+                <br/><br/> <!--TODO-->
+                <h3>Food</h3>
+                <p class="subcat">Accumulated</p>
+                <span id="outputTribeFoodAcc" class="output"></span>
+                <p class="subcat">Storage Capacity</p>
+                <span id="outputTribeFoodMax" class="output"></span>
+                <p class="subcat">Bilance</p>
+                <span id="outputTribeFoodBil" class="output"></span>
+                <p class="subcat">Year Avg Bilance</p>
+                <span id="outputTribeFoodYearBil" class="output"></span>
+                <p class="subcat">Base Income</p>
+                <span id="outputTribeRawIncome" class="output"></span>
+                <p class="subcat">Pref. Fruit Type</p>
                 <span id="outputTribePrefFruit" class="output"></span>
-                <p class="subcat">Accumulated Food</p>
-                <span id="outputTribeAccFood" class="output"></span>
             </div>
 
             <div id="sectionSettings" class="menuSection">
