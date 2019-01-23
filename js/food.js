@@ -75,8 +75,7 @@ function averagedFood(foodArray) {
     var tempPref = 0;
     var humdPref = 0;
     var fruitType = 0;
-    for (var index = 0; index < foodArray.length; index+= 1) {
-        var food = foodArray[index];
+    for (var food of foodArray) {
         efficiency += food.trait.efficiency;
         tempPref += food.trait.tempPref;
         humdPref += food.trait.humdPref;

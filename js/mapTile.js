@@ -103,11 +103,11 @@ function Tile(session, x, y, fertility, foodSpiece) {
         var indices = getNeighbourIndices(x, y, self.session.width, self.session.height);
         var otherTiles = self.session.requestTiles(indices);
         var otherFoods = [];
-        for (var i = 0; i < otherTiles.length; i += 1) {
-            var food = otherTiles[i].food;
+        for (var tile of otherTiles) {
+            var food = tile.food;
             if (session.tick - food.createTick < config.food.cloneMinAge) continue;
             if ((!food.isPlaceholder) && (food.strength >= config.food.clone.minStrength)) {
-                otherFoods.push(otherTiles[i].food);
+                otherFoods.push(food);
             }
         }
         //if (otherFoods.length < config.food.clone.minNeighbours) return;

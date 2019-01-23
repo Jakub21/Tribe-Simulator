@@ -282,8 +282,8 @@ function Session(canvasId) {
     }
 
     self.updateTiles = function() {
-        for (var i = 0; i < self.tiles.length; i += 1) {
-            self.tiles[i].update();
+        for (var tile of self.tiles) {
+            tile.update();
         }
     }
 
@@ -307,8 +307,7 @@ function Session(canvasId) {
 
     self.requestTiles = function(indices) {
         var tiles = [];
-        for (var i = 0; i < indices.length; i += 1) {
-            var index = indices[i];
+        for (var index of indices) {
             tiles.push(self.tiles[index]);
         }
         return tiles;
