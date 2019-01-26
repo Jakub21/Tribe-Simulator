@@ -47,6 +47,16 @@ function ceil(number) {
     return Math.ceil(number);
 }
 
+// Function for array reducing - sum
+function sum(total, current) {
+    return total + current;
+}
+
+// Function for array reducing - smallest
+function less(prev, current) {
+    if (current < prev) return current; else return prev;
+}
+
 // Get index of instance in array
 function indexOf(arr, obj) {
     for(var i=0; i<arr.length; i++) {

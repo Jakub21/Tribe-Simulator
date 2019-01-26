@@ -20,6 +20,8 @@
     <script src="js/climate.js"></script>
     <script src="js/tribe.js"></script>
     <script src="js/section.js"></script>
+    <script src="js/brain.js"></script>
+    <script src="js/economy.js"></script>
     <script src="js/session.js"></script>
     <body>
         <canvas id="mainCanvas"></canvas>
@@ -108,20 +110,25 @@
                 <span id="outputTribeIsSettled" class="output"></span>
                 <p class="subcat">Num. of Tiles</p>
                 <span id="outputTribeNumOfTiles" class="output"></span>
-                <br/><br/> <!--TODO-->
-                <h3>Food</h3>
-                <p class="subcat">Accumulated</p>
-                <span id="outputTribeFoodAcc" class="output"></span>
-                <p class="subcat">Storage Capacity</p>
-                <span id="outputTribeFoodMax" class="output"></span>
-                <p class="subcat">Bilance</p>
-                <span id="outputTribeFoodBil" class="output"></span>
-                <p class="subcat">Year Avg Bilance</p>
-                <span id="outputTribeFoodYearBil" class="output"></span>
-                <p class="subcat">Base Income</p>
-                <span id="outputTribeRawIncome" class="output"></span>
                 <p class="subcat">Pref. Fruit Type</p>
                 <span id="outputTribePrefFruit" class="output"></span>
+                <br/><br/> <!--TODO-->
+                <h3>Storage</h3>
+                <p class="subcat">Accumulated</p>
+                <span id="outputTribeFoodAcc" class="output"></span>
+                <p class="subcat">Capacity</p>
+                <span id="outputTribeFoodMax" class="output"></span>
+                <br/><br/> <!--TODO-->
+                <h3>Food Status</h3>
+                <p class="subcat">Income</p>
+                <span id="outputTribeFoodIncome" class="output"></span>
+                <p class="subcat">Expenses</p>
+                <span id="outputTribeFoodExpenses" class="output"></span>
+                <p class="subcat">Bilance</p>
+                <span id="outputTribeFoodBilance" class="output"></span>
+                <br/><br/> <!--TODO-->
+                <h3>Year Average</h3>
+                <!--TODO-->
             </div>
 
             <div id="sectionSettings" class="menuSection">

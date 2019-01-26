@@ -196,7 +196,7 @@ function Session(canvasId) {
         // Info
         document.getElementById("outputIndex").innerHTML = pt;
         if ((pt >= 0) && (pt < self.width*self.height)) {
-            var tile = self.tiles[pt]
+            var tile = self.tiles[pt];
             // Tile
             document.getElementById("outputTileOccupied").innerHTML = tile.isOccupied;
             document.getElementById("outputTileTemp").innerHTML = fRound(tile.temp);
@@ -222,14 +222,15 @@ function Session(canvasId) {
                 document.getElementById("outputTribePops").innerHTML = tile.occupiedBy.getPopulation();
                 document.getElementById("outputTribeIsSettled").innerHTML = tile.occupiedBy.isSettled;
                 document.getElementById("outputTribeNumOfTiles").innerHTML = tile.occupiedBy.sections.length;
-                document.getElementById("outputTribeFoodAcc").innerHTML = fRound(tile.occupiedBy.food.accum);
+                document.getElementById("outputTribeFoodAcc").innerHTML = fRound(tile.occupiedBy.economy.stored);
                 document.getElementById("outputTribeFoodMax").innerHTML = fRound(
-                    tile.occupiedBy.getCapacity());
-                document.getElementById("outputTribeFoodBil").innerHTML = fRound(tile.occupiedBy.food.bilance);
-                document.getElementById("outputTribeFoodYearBil").innerHTML = fRound(
-                    tile.occupiedBy.getYearBilance() / config.sim.yearLength);
-                document.getElementById("outputTribeRawIncome").innerHTML = fRound(
-                    tile.occupiedBy.food.rawIncome);
+                    tile.occupiedBy.current.capacity);
+                document.getElementById("outputTribeFoodIncome").innerHTML = fRound(
+                    tile.occupiedBy.economy.rawIncome);
+                document.getElementById("outputTribeFoodBilance").innerHTML = fRound(
+                    tile.occupiedBy.economy.bilance);
+                document.getElementById("outputTribeFoodExpenses").innerHTML = fRound(
+                    tile.occupiedBy.economy.rawExpenses);
                 document.getElementById("outputTribePrefFruit").innerHTML = tile.occupiedBy.prefFruit;
             }
             else {
@@ -239,9 +240,9 @@ function Session(canvasId) {
                 document.getElementById("outputTribeNumOfTiles").innerHTML = "";
                 document.getElementById("outputTribeFoodAcc").innerHTML = "";
                 document.getElementById("outputTribeFoodMax").innerHTML = "";
-                document.getElementById("outputTribeFoodBil").innerHTML = "";
-                document.getElementById("outputTribeFoodYearBil").innerHTML = "";
-                document.getElementById("outputTribeRawIncome").innerHTML = "";
+                document.getElementById("outputTribeFoodIncome").innerHTML = "";
+                document.getElementById("outputTribeFoodExpenses").innerHTML = "";
+                document.getElementById("outputTribeFoodBilance").innerHTML = "";
                 document.getElementById("outputTribePrefFruit").innerHTML = "";
             }
         }
@@ -267,9 +268,9 @@ function Session(canvasId) {
             document.getElementById("outputTribeNumOfTiles").innerHTML = "";
             document.getElementById("outputTribeFoodAcc").innerHTML = "";
             document.getElementById("outputTribeFoodMax").innerHTML = "";
-            document.getElementById("outputTribeFoodBil").innerHTML = "";
-            document.getElementById("outputTribeFoodYearBil").innerHTML = "";
-            document.getElementById("outputTribeRawIncome").innerHTML = "";
+            document.getElementById("outputTribeFoodIncome").innerHTML = "";
+            document.getElementById("outputTribeFoodExpenses").innerHTML = "";
+            document.getElementById("outputTribeFoodBilance").innerHTML = "";
             document.getElementById("outputTribePrefFruit").innerHTML = "";
         }
         // Simulation info
