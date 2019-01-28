@@ -8,6 +8,7 @@ function Food(session, efficiency, tempPref, humdPref, fruitType) {
         isPlaceholder: false,
         createTick: session.tick,
         strength: config.food.strength.start,
+        prevStrengths: [],
         trait: {
             efficiency: efficiency,
             tempPref: tempPref,
@@ -45,6 +46,9 @@ function Food(session, efficiency, tempPref, humdPref, fruitType) {
         change *= config.food.growth.base;
         self.strength += change;
         if (self.strength > config.food.strength.max) self.strength = config.food.strength.max;
+        self.prevStrengths.push(self.strength);
+        if (self.prevStrengths.length > config.sim.yearLength)
+            self.prevStrengths.shift();
         if (self.strength <= 0) self.die();
     }
     self.mutate = function() {
@@ -58,9 +62,16 @@ function Food(session, efficiency, tempPref, humdPref, fruitType) {
         var amp = cft.fruitType.mutateAmp;
         self.trait.fruitType += random(-amp, amp);
     }
+    self.getYearMinStrength = function() {
+        return self.prevStrengths.reduce(arrMinimum, self.strength);
+    }
+    self.getYearMaxStrength = function() {
+        return self.prevStrengths.reduce(arrMaximum, self.strength);
+    }
     self.die = function() {
         self.tile.tellFoodDied();
     }
+
     return self
 }
 /* ----------------------------------------------------------------

@@ -5,17 +5,18 @@
 function Session(canvasId) {
     var self = {
         canvas: document.getElementById(canvasId),
+        // Time
         tick: 0,
         year: 0,
         fps: config.sim.fps.default,
         paused: false,
-        tiles: [],
-        tribes: [],
+        // Size
         width: randint(config.map.widthMin, config.map.widthMax),
         height: randint(config.map.heightMin, config.map.heightMax),
+        // View
         view: {x: 0, y:0, zoom: config.disp.zoom.default,
             mapMode: "tribePrefFruit"},
-        barVisible: true,
+        // Noise seeds
         seeds: {
             fertility: random(0, 1),
             efficiency: random(0, 1),
@@ -23,12 +24,53 @@ function Session(canvasId) {
             humdPref: random(0, 1),
             fruitType: random(0, 1),
         },
+        // General
+        tiles: [],
+        tribes: [],
         pointedTile: NaN,
+        selectedTribe: undefined,
     };
 
     self.construct = function() {
         noise.seed(random(0, 1));
+        self.interface = Interface(self);
         self.climate = Climate(self);
+        self.makeMap();
+        self.makeTribes();
+        self.addEventListeners();
+    }
+
+    self.startLoop = function() {
+        self.bindButtonActions();
+        document.getElementById("inputZoom").value = mapValue(
+            self.view.zoom, config.disp.zoom.min, config.disp.zoom.max, 0, 100);
+        self.interval = setInterval(self.update, int(1000/self.fps));
+    }
+
+    self.update = function() {
+        if (!self.paused) {
+            self.tick += 1;
+            if (self.tick % config.sim.yearLength == 0) {self.year += 1;}
+        }
+        self.interface.update();
+        if (!self.paused) {
+            self.climate.update();
+            self.climate.updateTiles();
+            self.updateTiles();
+            for (var tribe of self.tribes) {
+                tribe.update();
+                if (!tribe.alive) {
+                    self.tribes.splice(indexOf(self.tribes, tribe), 1);
+                }
+            }
+            if (self.tribes.length < config.tribe.amount.min) {
+                self.addRandomTribe();
+            }
+        }
+        self.updateScreen();
+    }
+
+    self.makeMap = function() {
         var cft = config.food.trait;
         var scale;
         // Fill tiles array
@@ -66,6 +108,9 @@ function Session(canvasId) {
                 self.tiles.push(tile);
             }
         }
+    }
+
+    self.makeTribes = function() {
         // Add Tribes
         for (var i = 0; i < config.tribe.amount.start; i ++) {
             var x = randint(0, self.width);
@@ -73,81 +118,6 @@ function Session(canvasId) {
             var tile = self.tiles[getIndex(x, y, self.width)];
             self.tribes.push(Tribe(self, tile))
         }
-        // Setup event handlers
-        self.canvas.addEventListener('mousemove', self.handlerMouseMove);
-        self.canvas.addEventListener("mousedown", self.handlerMouseClick);
-        self.canvas.addEventListener("mouseup", self.handlerMouseUnclick);
-        self.canvas.addEventListener("mouseout", self.handlerMouseLeave);
-        self.canvas.addEventListener("wheel", self.handlerMouseWheel);
-    }
-
-    self.startLoop = function() {
-        self.prepareStyleVariants();
-        self.bindButtonActions();
-        document.getElementById("controlZoom").value = mapValue(
-            self.view.zoom, config.disp.zoom.min, config.disp.zoom.max, 0, 100);
-        self.interval = setInterval(self.update, int(1000/self.fps));
-    }
-
-    self.loopOnce = function() {
-        // Used for debug
-        self.prepareStyleVariants();
-        self.bindButtonActions();
-        document.getElementById("controlZoom").value = mapValue(
-            self.view.zoom, config.disp.zoom.min, config.disp.zoom.max, 0, 100);
-        self.update();
-    }
-
-    self.toggleStyle = function() {
-        var path;
-        if (self.styleVariant == "h") {
-            self.styleVariant = "v";
-            path = "css/vertical.css";
-        }
-        else if (self.styleVariant == "v") {
-            self.styleVariant = "h";
-            path = "css/horizontal.css";
-        }
-        document.getElementById("styleVariant").setAttribute("href", path);
-    }
-
-    self.prepareStyleVariants = function() { // Prepares HTML
-        var clientW = document.documentElement.clientWidth;
-        var clientH = document.documentElement.clientHeight;
-        if (clientW >= config.disp.ui.toggleBarAtWidth) {
-            self.styleVariant = "v";
-            document.getElementById("styleVariant").setAttribute("href", "css/vertical.css");
-        }
-        else {
-            self.styleVariant = "h";
-            document.getElementById("styleVariant").setAttribute("href", "css/horizontal.css");
-        }
-        self.showSection("mapModes");
-    }
-
-    self.update = function() {
-        if (!self.paused) {
-            self.tick += 1;
-            if (self.tick % config.sim.yearLength == 0) {self.year += 1;}
-        }
-        self.updateCanvasSize();
-        self.readControls();
-        self.updateControlsLabels();
-        if (!self.paused) {
-            self.climate.update();
-            self.climate.updateTiles();
-            self.updateTiles();
-            for (var tribe of self.tribes) {
-                tribe.update();
-                if (!tribe.alive) {
-                    self.tribes.splice(indexOf(self.tribes, tribe), 1);
-                }
-            }
-            if (self.tribes.length < config.tribe.amount.min) {
-                self.addRandomTribe();
-            }
-        }
-        self.updateScreen();
     }
 
     self.addRandomTribe = function() {
@@ -158,128 +128,6 @@ function Session(canvasId) {
             var tile = self.tiles[getIndex(x, y, self.width)];
         }
         self.tribes.push(Tribe(self, tile));
-    }
-
-    self.updateCanvasSize = function() {
-        var width, height;
-        var clientW = document.documentElement.clientWidth;
-        var clientH = document.documentElement.clientHeight;
-        var st = config.disp.canvas;
-        if (self.styleVariant == "v") {
-            if (self.barVisible) {width = clientW * (st.percW/100) - st.borderX;}
-            else {width = clientW - st.borderX - st.hiddenBarSize;}
-            height = clientH - st.borderY;
-        }
-        else if (self.styleVariant == "h") {
-            width = clientW - st.borderX;
-            if (self.barVisible) {height = clientH * (st.percH/100) - st.borderY;}
-            else {height = clientH - st.borderY - st.hiddenBarSize;}
-        }
-        self.canvas.setAttribute("width", width);
-        self.canvas.setAttribute("height", height);
-    }
-
-    self.updateControlsLabels = function() {
-        // Time elapsed
-        document.getElementById("outputYear").innerHTML = self.year;
-        var seasonIndex=0, seasonName;
-        var yearLength = config.sim.yearLength;
-        var yearTick = self.tick%yearLength;
-        var seasonLength = yearLength / 4;
-        while (yearTick > seasonLength) {seasonIndex += 1; yearTick -= seasonLength;}
-        var seasonName = config.disp.season[seasonIndex];
-        document.getElementById("outputSeason").innerHTML = seasonName;
-        var humanizedZoom = int(self.view.zoom * 100);
-        // View info
-        document.getElementById("outputZoom").innerHTML = humanizedZoom;
-        var pt = self.pointedTile;
-        // Info
-        document.getElementById("outputIndex").innerHTML = pt;
-        if ((pt >= 0) && (pt < self.width*self.height)) {
-            var tile = self.tiles[pt];
-            // Tile
-            document.getElementById("outputTileOccupied").innerHTML = tile.isOccupied;
-            document.getElementById("outputTileTemp").innerHTML = fRound(tile.temp);
-            document.getElementById("outputTileHumd").innerHTML = fRound(tile.humd);
-            document.getElementById("outputTileFert").innerHTML = fRound(tile.fertility);
-            // Food
-            document.getElementById("outputFoodStrength").innerHTML = fRound(tile.food.strength);
-            document.getElementById("outputFoodFruit").innerHTML = fRound(tile.food.trait.fruitType);
-            document.getElementById("outputFoodTempPref").innerHTML = fRound(tile.food.trait.tempPref);
-            document.getElementById("outputFoodTempDelta").innerHTML = fRound(tile.food.trait.tempPref - tile.temp);
-            document.getElementById("outputFoodHumdPref").innerHTML = fRound(tile.food.trait.humdPref);
-            document.getElementById("outputFoodHumdDelta").innerHTML = fRound(tile.food.trait.humdPref - tile.humd);
-            document.getElementById("outputFoodIsPlaceholder").innerHTML = !tile.food.isPlaceholder;
-            var foodAge = self.tick - tile.food.createTick;
-            if (!tile.food.isPlaceholder) {
-                document.getElementById("outputFoodAge").innerHTML = int(foodAge/yearLength) +
-                    ' yrs ' + foodAge%yearLength + ' d';}
-            else {
-                document.getElementById("outputFoodAge").innerHTML = NaN;}
-            // Tribe
-            if (tile.isOccupied) {
-                document.getElementById("outputTribeName").innerHTML = tile.occupiedBy.name;
-                document.getElementById("outputTribePops").innerHTML = tile.occupiedBy.getPopulation();
-                document.getElementById("outputTribeIsSettled").innerHTML = tile.occupiedBy.isSettled;
-                document.getElementById("outputTribeNumOfTiles").innerHTML = tile.occupiedBy.sections.length;
-                document.getElementById("outputTribeFoodAcc").innerHTML = fRound(tile.occupiedBy.economy.stored);
-                document.getElementById("outputTribeFoodMax").innerHTML = fRound(
-                    tile.occupiedBy.current.capacity);
-                document.getElementById("outputTribeFoodIncome").innerHTML = fRound(
-                    tile.occupiedBy.economy.rawIncome);
-                document.getElementById("outputTribeFoodBilance").innerHTML = fRound(
-                    tile.occupiedBy.economy.bilance);
-                document.getElementById("outputTribeFoodExpenses").innerHTML = fRound(
-                    tile.occupiedBy.economy.rawExpenses);
-                document.getElementById("outputTribePrefFruit").innerHTML = tile.occupiedBy.prefFruit;
-            }
-            else {
-                document.getElementById("outputTribeName").innerHTML = "";
-                document.getElementById("outputTribePops").innerHTML = "";
-                document.getElementById("outputTribeIsSettled").innerHTML = "";
-                document.getElementById("outputTribeNumOfTiles").innerHTML = "";
-                document.getElementById("outputTribeFoodAcc").innerHTML = "";
-                document.getElementById("outputTribeFoodMax").innerHTML = "";
-                document.getElementById("outputTribeFoodIncome").innerHTML = "";
-                document.getElementById("outputTribeFoodExpenses").innerHTML = "";
-                document.getElementById("outputTribeFoodBilance").innerHTML = "";
-                document.getElementById("outputTribePrefFruit").innerHTML = "";
-            }
-        }
-        else {
-            // Tile
-            document.getElementById("outputTileOccupied").innerHTML = "";
-            document.getElementById("outputTileTemp").innerHTML = "";
-            document.getElementById("outputTileHumd").innerHTML = "";
-            document.getElementById("outputTileFert").innerHTML = "";
-            // Food
-            document.getElementById("outputFoodStrength").innerHTML = "";
-            document.getElementById("outputFoodFruit").innerHTML = "";
-            document.getElementById("outputFoodTempPref").innerHTML = "";
-            document.getElementById("outputFoodTempDelta").innerHTML = "";
-            document.getElementById("outputFoodHumdPref").innerHTML = "";
-            document.getElementById("outputFoodHumdDelta").innerHTML = "";
-            document.getElementById("outputFoodIsPlaceholder").innerHTML = "";
-            document.getElementById("outputFoodAge").innerHTML = "";
-            // Tribe
-            document.getElementById("outputTribeName").innerHTML = "";
-            document.getElementById("outputTribePops").innerHTML = "";
-            document.getElementById("outputTribeIsSettled").innerHTML = "";
-            document.getElementById("outputTribeNumOfTiles").innerHTML = "";
-            document.getElementById("outputTribeFoodAcc").innerHTML = "";
-            document.getElementById("outputTribeFoodMax").innerHTML = "";
-            document.getElementById("outputTribeFoodIncome").innerHTML = "";
-            document.getElementById("outputTribeFoodExpenses").innerHTML = "";
-            document.getElementById("outputTribeFoodBilance").innerHTML = "";
-            document.getElementById("outputTribePrefFruit").innerHTML = "";
-        }
-        // Simulation info
-        document.getElementById("outputFps").innerHTML = self.fps;
-    }
-
-    self.readControls = function() {
-        var zoom = document.getElementById("controlZoom").value;
-        self.view.zoom = mapValue(zoom, 0, 99, config.disp.zoom.min, config.disp.zoom.max);
     }
 
     self.updateTiles = function() {
@@ -314,90 +162,18 @@ function Session(canvasId) {
         return tiles;
     }
 
+    self.resetZoom = function() {
+        self.view.zoom = config.disp.zoom.default;
+        document.getElementById("inputZoom").value = mapValue(self.view.zoom,
+            config.disp.zoom.min, config.disp.zoom.max, 0, 100);
+    }
+
     /* --------------------------------
     * Button actions
     */
 
     self.bindButtonActions = function() {
-        // Toggle style (vertical / horizontal)
-        document.getElementById("toggleStyle").onclick = self.toggleStyle;
-        // Show / Hide UI Bar
-        document.getElementById("hideBar").onclick = function() {
-            document.getElementById("uiBar").style.display = "none";
-            document.getElementById("showBar").style.display = "block";
-            self.barVisible = false;
-        }
-        document.getElementById("showBar").onclick = function() {
-            document.getElementById("uiBar").style.display = "block";
-            document.getElementById("showBar").style.display = "none";
-            self.barVisible = true;
-        }
-        // Section choice buttons
-        document.getElementById("viewMapModes").onclick = function(){self.showSection("mapModes");};
-        document.getElementById("viewTileInfo").onclick = function(){self.showSection("tileInfo");};
-        document.getElementById("viewFoodInfo").onclick = function(){self.showSection("foodInfo");};
-        document.getElementById("viewTribeInfo").onclick = function(){self.showSection("tribeInfo");};
-        document.getElementById("viewSimSettings").onclick = function(){self.showSection("simSettings");};
-        // Map mode choice buttons
-        document.getElementById("mapModeTemp").onclick = function(){self.toggleMapMode("temp");};
-        document.getElementById("mapModeHumd").onclick = function(){self.toggleMapMode("humd");};
-        document.getElementById("mapModeFert").onclick = function(){self.toggleMapMode("fert");};
-        document.getElementById("mapModeFoodFruitType").onclick =
-            function(){self.toggleMapMode("foodFruitType");};
-        document.getElementById("mapModeFoodPrefTemp").onclick =
-            function(){self.toggleMapMode("foodPrefTemp");};
-        document.getElementById("mapModeFoodPrefHumd").onclick =
-            function(){self.toggleMapMode("foodPrefHumd");};
-        document.getElementById("mapModeTribePrefFruit").onclick =
-            function(){self.toggleMapMode("tribePrefFruit");};
-        // Simulation Speed
-        document.getElementById("fpsIncrease").onclick = function(){self.changeSpeed(1);};
-        document.getElementById("fpsDecrease").onclick = function(){self.changeSpeed(-1);};
-        document.getElementById("fpsReset").onclick = function(){self.changeSpeed(false);};
-        document.getElementById("fpsPause").onclick = function(){self.togglePause();};
-    }
 
-    self.showSection = function(section) {
-        var sectMapModes = document.getElementById("sectionMapmodes");
-        var secTileInfo = document.getElementById("sectionTileInfo");
-        var secFoodInfo = document.getElementById("sectionFoodInfo");
-        var secTribeInfo = document.getElementById("sectionTribeInfo");
-        var secSimSettings = document.getElementById("sectionSettings");
-        if (section == "mapModes") {
-            sectMapModes.style.display = "block";
-            secTileInfo.style.display = "none";
-            secFoodInfo.style.display = "none";
-            secTribeInfo.style.display = "none";
-            secSimSettings.style.display = "none";
-        }
-        else if (section == "tileInfo") {
-            sectMapModes.style.display = "none";
-            secTileInfo.style.display = "block";
-            secFoodInfo.style.display = "none";
-            secTribeInfo.style.display = "none";
-            secSimSettings.style.display = "none";
-        }
-        else if (section == "foodInfo") {
-            sectMapModes.style.display = "none";
-            secTileInfo.style.display = "none";
-            secFoodInfo.style.display = "block";
-            secTribeInfo.style.display = "none";
-            secSimSettings.style.display = "none";
-        }else if (section == "tribeInfo") {
-            sectMapModes.style.display = "none";
-            secTileInfo.style.display = "none";
-            secTileInfo.style.display = "none";
-            secFoodInfo.style.display = "none";
-            secTribeInfo.style.display = "block";
-            secSimSettings.style.display = "none";
-        }
-        else if (section == "simSettings") {
-            sectMapModes.style.display = "none";
-            secTileInfo.style.display = "none";
-            secFoodInfo.style.display = "none";
-            secTribeInfo.style.display = "none";
-            secSimSettings.style.display = "block";
-        }
     }
 
     self.toggleMapMode = function(mapmode) {
@@ -417,6 +193,7 @@ function Session(canvasId) {
         clearInterval(self.interval);
         self.interval = setInterval(self.update, int(1000/self.fps));
     }
+
     self.togglePause = function() {
         self.paused = !self.paused;
     }
@@ -424,6 +201,15 @@ function Session(canvasId) {
     /* --------------------------------
     * Canvas Event Handlers
     */
+
+    self.addEventListeners = function() {
+        // Setup event handlers
+        self.canvas.addEventListener('mousemove', self.handlerMouseMove);
+        self.canvas.addEventListener("mousedown", self.handlerMouseClick);
+        self.canvas.addEventListener("mouseup", self.handlerMouseUnclick);
+        self.canvas.addEventListener("mouseout", self.handlerMouseLeave);
+        self.canvas.addEventListener("wheel", self.handlerMouseWheel);
+    }
 
     self.handlerMouseMove = function(evt) {
         var tw = int(config.disp.elems.tile * self.view.zoom);
@@ -458,6 +244,10 @@ function Session(canvasId) {
             var pointedTile = {x: int((mousePos.x+self.view.x)/(tw+1)),
                 y: int((mousePos.y+self.view.y)/(tw+1))};
             var tileIndex = getIndex(pointedTile.x, pointedTile.y, self.width);
+            var tile = self.tiles[tileIndex];
+            if (tile.isOccupied) {
+                self.selectedTribe = tile.occupiedBy; }
+                else self.selectedTribe = undefined;
         }
     }
 
@@ -468,9 +258,9 @@ function Session(canvasId) {
     }
 
     self.handlerMouseWheel = function(evt) {
-        var current = document.getElementById("controlZoom").value;
+        var current = document.getElementById("inputZoom").value;
         current = int(current) - evt.deltaY;
-        document.getElementById("controlZoom").value = current;
+        document.getElementById("inputZoom").value = current;
     }
 
     self.construct();

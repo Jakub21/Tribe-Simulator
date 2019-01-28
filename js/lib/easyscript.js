@@ -1,6 +1,6 @@
 "use strict";
 /* ----------------------------------------------------------------
-* Wrappers for Math functions and other helper functions
+* Helper functions and wrappers
 */
 
 // Random float greater than $from and less than $to
@@ -47,14 +47,19 @@ function ceil(number) {
     return Math.ceil(number);
 }
 
-// Function for array reducing - sum
-function sum(total, current) {
+// Function for array reducing - sum of values
+function arrSum(total, current) {
     return total + current;
 }
 
-// Function for array reducing - smallest
-function less(prev, current) {
+// Function for array reducing - minimum value
+function arrMinimum(prev, current) {
     if (current < prev) return current; else return prev;
+}
+
+// Function for array reducing - maximum value
+function arrMaximum(prev, current) {
+    if (current > prev) return current; else return prev;
 }
 
 // Get index of instance in array
@@ -155,4 +160,18 @@ function fromHsl(h, s, l) {
         return hex.length === 1 ? '0' + hex : hex;
     };
     return `#${toHex(r)}${toHex(g)}${toHex(b)}`;
+}
+
+// Wrapper for HTML manipulation
+function docGetById(id) {
+    return document.getElementById(id);
+}
+function docGetByClass(cls) {
+    return document.getElementsByClassName(cls);
+}
+function docWrite(id, content) {
+    docGetById(id).innerHTML = content;
+}
+function docClear(id) {
+    docGetById(id).innerHTML = '-';
 }

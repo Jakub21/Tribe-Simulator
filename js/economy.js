@@ -8,6 +8,9 @@ function Economy(tribe) {
         session: tribe.session,
         stored: 0,
         size: 1, // Economy size factor, affects various costs
+        rawIncome: 0,
+        rawExpenses: 0,
+        bilance: 0,
         prevIncome: [],
         prevExpenses: [],
         prevBilance: [],
@@ -49,11 +52,17 @@ function Economy(tribe) {
             self.stored = self.tribe.current.capacity;
         }
     }
-    self.getYearAvgBilance = function() {
-        return self.prevBilance.reduce(sum) / config.sim.yearLength;
+    self.getYearIncome = function() {
+        if (self.prevIncome.length == 0) return 0;
+        return self.prevIncome.reduce(arrSum);
     }
-    self.getYearAvgIncome = function() {
-        return self.prevIncome.reduce(sum) / config.sim.yearLength;
+    self.getYearExpenses = function() {
+        if (self.prevExpenses.length == 0) return 0;
+        return self.prevExpenses.reduce(arrSum);
+    }
+    self.getYearBilance = function() {
+        if (self.prevBilance.length == 0) return 0;
+        return self.prevBilance.reduce(arrSum);
     }
     return self;
 }

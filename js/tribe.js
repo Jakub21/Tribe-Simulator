@@ -9,6 +9,7 @@ function Tribe(session, startTile) {
         sections: [],
         isSettled: false,
         alive: true,
+        popsHistory: [],
         last: { // Stores session tick
             migration: 0,
             expansion: 0,
@@ -47,6 +48,8 @@ function Tribe(session, startTile) {
         for (var section of self.sections) {
             section.die(); }
         self.alive = false;
+        if (self.session.selectedTribe == self)
+            self.session.selectedTribe = undefined;
     }
     self.tellSectionDied = function(section) {
         var index = indexOf(self.sections, section);
@@ -59,6 +62,9 @@ function Tribe(session, startTile) {
         // Save those values so functions dont have to be called multiple times
         // Also performs some checks
         self.current.population = self.getPopulation();
+        self.popsHistory.push(self.current.population);
+        if (self.popsHistory.length > config.sim.yearLength)
+            self.popsHistory.shift();
         // Tile, local foods
         self.current.onDeadTile = self.capital.tile.food.isPlaceholder;
         // Foods
@@ -84,6 +90,10 @@ function Tribe(session, startTile) {
         for (var section of self.sections) {
             pops += section.population; }
         return pops;
+    }
+    self.getPopsDelta = function(ticks) {
+        if (ticks > self.popsHistory.length) return undefined;
+        return self.current.population - self.popsHistory[self.popsHistory.length-ticks];
     }
 
     self.canExpand = function() {
