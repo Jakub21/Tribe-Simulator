@@ -68,7 +68,7 @@ function Tribe(session, startTile) {
         // Tile, local foods
         self.current.onDeadTile = self.capital.tile.food.isPlaceholder;
         // Foods
-        self.current.capacity = self.current.population * config.tribe.eco.capacity.perPop;
+        self.current.capacity = self.current.population * config.tribe.eco.capacity.perPop + config.tribe.eco.capacity.base;
     }
 
     self.shortage = function(severity) {

@@ -30,7 +30,7 @@ function Food(session, efficiency, tempPref, humdPref, fruitType) {
         tempFactor = mapValue(tempFactor, tempEff, -tempEff, tempRange.max, tempRange.min);
         if (tempFactor < -1) tempFactor = -1;
         // Calculate humidity
-        var humdRange = config.food.growth.temp.range;
+        var humdRange = config.food.growth.humd.range;
         var humdDelta = abs(self.trait.humdPref - self.tile.humd);
         var humdScale = config.food.growth.humd.scale;
         var humdEff = config.food.growth.humd.efficiency;
