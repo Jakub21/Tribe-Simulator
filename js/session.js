@@ -11,8 +11,8 @@ function Session(canvasId) {
         fps: config.sim.fps.default,
         paused: false,
         // Size
-        width: randint(config.map.widthMin, config.map.widthMax),
-        height: randint(config.map.heightMin, config.map.heightMax),
+        width: config.map.width,
+        height: config.map.height,
         // View
         view: {x: 0, y:0, zoom: config.disp.zoom.default,
             mapMode: "tribePrefFruit"},

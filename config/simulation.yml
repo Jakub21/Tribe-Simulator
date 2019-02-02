@@ -2,11 +2,11 @@
 
 # ----------------------------------------------------------------
 sim:
+    yearLength: 365 # [ticks]
     fps:
         max: 240
         default: 40
         step: 10
-    yearLength: 365 # [ticks]
 
 # ----------------------------------------------------------------
 disp:
@@ -47,31 +47,22 @@ disp:
         hue:
             max: 190
             min: 0
-    canvas:
-        percW: 80 # Vertical view: Width [Percentage]
-        percH: 70 # Horizontal view: Height [Percentage]
-        borderX: 2 # Canvas border
-        borderY: 2 # Canvas border
-    ui:
-        toggleBarAtWidth: 800
-        hiddenBarSize: 15
     season: [
         Summer, Autumn, Winter, Spring]
 
 # ----------------------------------------------------------------
 map:
-    widthMin: 48
-    widthMax: 48
-    heightMin: 48
-    heightMax: 48
+    width: 48
+    height: 48
 
 # ----------------------------------------------------------------
 food:
-    fruitTypes: 50
     strength:
         max: 100
         start: 30
     growth:
+        base: 1.4
+        loseMultiplier: 1.5
         temp:
             scale: 0.5
             efficiency: 10
@@ -84,8 +75,6 @@ food:
             range:
                 max: 1.2
                 min: -1
-        base: 1.4
-        loseMultiplier: 1.5
     clone:
         minStrength: 70
         minAge: 0.3
