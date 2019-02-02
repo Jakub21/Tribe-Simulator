@@ -25,23 +25,23 @@ Specifies framerate of simulation
 `disp`  
 Display, UI, colours etc
 
-##### Zoom subsection
+#### Zoom subsection
 `disp.zoom`  
 Zoom configuration. Zoom is multiplier of map elements size.
 - `max` - Maximum zoom multiplier
 - `min` - Minimum zoom multiplier
 - `default` - Zoom applied when program starts
 
-##### Elements subsection
+#### Elements subsection
 `disp.elems`  
 Specifies size of various objects. Values expressed in pixels.
 - `tile` - Size of tile
 
-##### Range subsection
+#### Range subsection
 `disp.range`  
 Ranges are used to map values to colours. All ranges are mapped to colour hue. Range of `strength` is an exception, it is mapped to colour luminosity.
 
-##### Colours subsections
+#### Colours subsections
 `disp.color`  
 Defines colours.
 - `sat` - Colour saturation
@@ -55,7 +55,7 @@ Defines colours.
     - `foodTribe` - Range of luminosity in map modes where both food and tribes are visible
 - `hue` - Colour hue range
 
-##### Season
+#### Season
 `disp.season` **ARRAY**  
 Contains names of year seasons
 
@@ -69,13 +69,13 @@ Contains definitions of map size
 `food`  
 Specifies food-related constants
 
-##### Strength subsection
+#### Strength subsection
 `food.strength`  
 Defines strength values
 - `max` - Maximum possible food strength
 - `start` - Strength of food when it is spawned
 
-##### Growth subsection
+#### Growth subsection
 `food.growth`  
 Constants affecting growth rate
 - `base` - Base growth multiplier
@@ -89,14 +89,14 @@ Constants affecting growth rate
     - `efficiency` - At what difference(current, preferred) efficiency falls to zero
     - `range` - Value mapping range
 
-##### Cloning subsection
+#### Cloning subsection
 `food.clone`  
 Defines clone requirements for tiles and foods.
 - `minStrength` - Minimum strength of food for it to be counted as alive neighbour
 - `minAge` - Minimum age of food for it to be counted as alive neighbour
 - `minNeighbours` - Minimum amount of neighbours with alive foods tile needs for it to be able to generate new food.
 
-##### Traits subsection
+#### Traits subsection
 `food.trait`  
 Food traits definitions. All traits conform to this template.
 - **TEMPLATE**
@@ -115,14 +115,14 @@ List of traits:
 `tile`  
 Contains tile configuration
 
-##### Fertility subsection
+#### Fertility subsection
 `tile.fertility`  
 Defines fertility values
 - `base` - Base tile fertility
 - `baseAmp` - Amplitude of fertility noise
 - `noiseScale` - Factor of noise size
 
-##### Own food subsection
+#### Own food subsection
 `tile.ownedFood`  
 Regulates tile - food relation
 - `diedCooldown` - How much time must pass after food died before new one can be generated. Expressed in years.
@@ -132,7 +132,7 @@ Regulates tile - food relation
 `climate`  
 Defines climate
 
-##### Variable definitions
+#### Variable definitions
 `climate.temp` `climate.humd`  
 Defines ranges and values of temperature and humidity. Both subsections match this template.
 - **TEMPLATE**
@@ -141,12 +141,12 @@ Defines ranges and values of temperature and humidity. Both subsections match th
     - `longitudeAmp` - How much value in one map extreme differs from value on opposite extreme
     - `localAmp` - Amplitude of cloud changes.
 
-##### Greenhouse subsection
+#### Greenhouse subsection
 `climate.greenhouse`  
 Contains greenhouse related constants
 - `base` - Starting value of greenhouse effect
 
-##### Clouds subsection
+#### Clouds subsection
 `climate.cloud`  
 Clouds configuration
 - `noiseScale` - Size of noise
@@ -159,19 +159,19 @@ Clouds configuration
 `tribe`  
 Defines tribes related constants
 
-##### Tribes amount subsection
+#### Tribes amount subsection
 `tribe.amount`  
 Defines amount of tribes in the simulation
 - `start` - Amount of tribes at start of the program
 - `min` - If number of alive tribes falls below this, new one is added
 
-##### Population subsection
+#### Population subsection
 `tribe.pops`  
 Population constants
 - `start` - Starting tribe population
 - `max` - Maximum population per section
 
-##### Economy subsection
+#### Economy subsection
 `tribe.eco`  
 Defines food economy
 - `incomeMultiplier` - Food income is multiplied by this value
@@ -182,5 +182,5 @@ Defines food economy
     - `base` - Base capacity
     - `perPop` - Capacity added, per population
 
-##### Migration subsection
+#### Migration subsection
 Migration is in development
